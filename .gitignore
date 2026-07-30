@@ -1,0 +1,14 @@
+# Java and Node build artifacts
+backend/target/
+frontend/node_modules/
+tenant-portal/node_modules/
+frontend/dist/
+tenant-portal/dist/
+
+# Local environment and IDE files
+.env
+.env.*
+!.env.example
+.idea/
+.vscode/
+*.iml
