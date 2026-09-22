@@ -17,7 +17,9 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; font-family: 'Inter', system-ui, sans-serif; color: var(--ink); background: var(--bg); }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; min-width: 320px; font-family: 'Inter', system-ui, sans-serif; color: var(--ink); background: var(--bg); }
+button, input, select, textarea { font: inherit; }
 
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -119,8 +121,11 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-
 .tp-tab-active { background: #fff; color: var(--indigo); box-shadow: 0 2px 6px rgba(20,20,43,.08); }
 
 @media (max-width: 720px) {
-  .tp-card { grid-template-columns: 1fr; }
+  .tp-page { align-items: flex-start; padding: 0; }
+  .tp-card { min-height: 100vh; grid-template-columns: 1fr; border-radius: 0; box-shadow: none; }
   .tp-image-side { display: none; }
+  .tp-form-side { padding: 36px 24px; justify-content: flex-start; }
+  .tp-form-side h1 { font-size: 28px; }
 }
 
 /* ---------- Dashboard shell ---------- */
@@ -169,6 +174,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-
   border-radius: 10px; border: 1px solid var(--border); background: #fff; align-items: center;
   justify-content: center; cursor: pointer;
 }
+.db-nav-backdrop { display: none; }
 
 .db-main { flex: 1; padding: 36px 44px; max-width: 980px; }
 
@@ -179,6 +185,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-
     transition: transform .2s ease; box-shadow: 0 0 40px rgba(0,0,0,.15);
   }
   .db-sidebar-open { transform: translateX(0); }
+  .db-nav-backdrop { display: block; position: fixed; inset: 0; z-index: 20; border: 0; background: rgba(20,20,43,.34); }
   .db-main { padding: 80px 20px 40px; }
 }
 
@@ -366,3 +373,63 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-
 .db-doc-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .db-doc-list li { display: flex; align-items: center; gap: 10px; font-size: 13px; }
 .db-doc-date { margin-left: auto; color: var(--ink-soft); font-size: 12px; }
+
+/* ---------- Compact phone layout ---------- */
+@media (max-width: 560px) {
+  .tp-form-side { padding: 32px 20px; }
+  .tp-brand { margin-bottom: 24px; }
+  .tp-social-row { gap: 8px; }
+  .tp-social-btn { min-height: 44px; }
+
+  .db-mobile-toggle { top: 12px; left: 12px; width: 44px; height: 44px; }
+  .db-sidebar { width: min(84vw, 320px); padding: 20px 14px; }
+  .db-main { width: 100%; padding: 72px 14px 28px; }
+  .db-page { gap: 16px; }
+  .db-page-header h1 { font-size: 24px; }
+  .db-page-header-row { gap: 12px; }
+  .db-header-btn { width: 100%; min-height: 44px; }
+  .db-panel { border-radius: 14px; padding: 18px 16px; }
+  .db-panel-header { margin-bottom: 12px; }
+  .db-panel-header-row { align-items: flex-start; gap: 10px; }
+  .db-hero { padding: 24px 20px; }
+  .db-hero h1 { font-size: 21px; }
+  .db-hero-roofline { width: 80%; opacity: .28; }
+  .db-grid { gap: 12px; }
+  .db-card-stat { min-height: 80px; padding: 16px; }
+
+  .db-rent-summary { align-items: stretch; gap: 16px; }
+  .db-rent-amount { font-size: 27px; }
+  .db-pay-actions { display: grid; grid-template-columns: 1fr; }
+  .db-pay-btn, .db-pay-success { width: 100%; min-height: 44px; }
+  .db-stk-note { align-items: flex-start; line-height: 1.45; }
+
+  .db-table { min-width: 520px; }
+  .db-table th, .db-table td { padding: 10px 8px; }
+  .db-panel:has(.db-table) { overflow-x: auto; padding-bottom: 8px; }
+  .db-panel:has(.db-table) .db-panel-header { position: sticky; left: 0; }
+
+  .db-ticket-summary { align-items: flex-start; padding: 16px; }
+  .db-ticket-summary > div { min-width: 0; }
+  .db-ticket-title { display: block; line-height: 1.35; }
+  .db-ticket-details { padding: 0 16px 16px; }
+  .db-stepper { gap: 2px; overflow-x: auto; padding-bottom: 2px; }
+  .db-step { min-width: 54px; }
+  .db-step-label { font-size: 9px; }
+  .db-ticket-updates li { flex-direction: column; gap: 2px; }
+  .db-ticket-updates li span { width: auto; }
+  .db-confirm-close { width: 100%; min-height: 44px; }
+
+  .db-modal-backdrop { align-items: flex-end; padding: 0; }
+  .db-modal { max-width: none; max-height: 92vh; overflow-y: auto; border-radius: 20px 20px 0 0; padding: 22px 20px calc(22px + env(safe-area-inset-bottom)); }
+  .db-form input, .db-form select, .db-form textarea, .tp-form-side input { font-size: 16px; }
+  .db-file-label { min-height: 44px; }
+  .db-notice-form { align-items: stretch; }
+  .db-notice-form input { min-width: 0; font-size: 16px; }
+  .db-notice-send { width: 48px; }
+  .db-notif { padding: 12px 0; }
+  .db-lease-grid { grid-template-columns: 1fr; gap: 12px; }
+  .db-edit-actions { width: 100%; }
+  .db-edit-actions .tp-btn { flex: 1; min-height: 44px; }
+  .db-doc-list li { align-items: flex-start; flex-wrap: wrap; }
+  .db-doc-date { width: 100%; margin-left: 0; }
+}

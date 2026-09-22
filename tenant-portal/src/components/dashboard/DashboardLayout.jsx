@@ -33,7 +33,15 @@ export default function DashboardLayout() {
         {mobileOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
 
-      <aside className={`db-sidebar ${mobileOpen ? 'db-sidebar-open' : ''}`}>
+      {mobileOpen && (
+        <button
+          className="db-nav-backdrop"
+          onClick={() => setMobileOpen(false)}
+          aria-label="Close menu"
+        />
+      )}
+
+      <aside className={`db-sidebar ${mobileOpen ? 'db-sidebar-open' : ''}`} aria-label="Tenant navigation">
         <div className="db-brand">
           <span className="tp-mark">n</span>
           <span>NestHub</span>
