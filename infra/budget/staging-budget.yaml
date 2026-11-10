@@ -1,0 +1,29 @@
+# Prepared budget definition — apply ONLY after a billing account is linked.
+# Alerts are notifications, not hard spending caps.
+#
+# Apply example (after billing exists):
+#   gcloud billing budgets create \
+#     --billing-account=BILLING_ACCOUNT_ID \
+#     --display-name="SIONA NestHub Staging" \
+#     --budget-amount=50USD \
+#     --threshold-rule=percent=10 \
+#     --threshold-rule=percent=20 \
+#     --threshold-rule=percent=40 \
+#     --threshold-rule=percent=100 \
+#     --filter-projects=projects/8657091897
+#
+# Thresholds relative to $50 budget ≈ $5 / $10 / $20 / $50.
+
+displayName: SIONA NestHub Staging
+budgetFilter:
+  projects:
+    - projects/8657091897
+amount:
+  specifiedAmount:
+    currencyCode: USD
+    units: "50"
+thresholdRules:
+  - thresholdPercent: 0.1
+  - thresholdPercent: 0.2
+  - thresholdPercent: 0.4
+  - thresholdPercent: 1.0

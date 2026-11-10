@@ -1,13 +1,15 @@
 {
   "projects": {
-    "default": "REPLACE_WITH_SIONA_STAGING_PROJECT_ID"
+    "default": "siona-nesthub-staging-2026",
+    "staging": "siona-nesthub-staging-2026"
   },
   "targets": {
-    "REPLACE_WITH_SIONA_STAGING_PROJECT_ID": {
+    "siona-nesthub-staging-2026": {
       "hosting": {
-        "main": ["REPLACE_WITH_MAIN_HOSTING_SITE_ID"],
-        "tenant": ["REPLACE_WITH_TENANT_HOSTING_SITE_ID"]
+        "main": ["siona-nesthub-staging-2026"],
+        "tenant": ["siona-nesthub-staging-tenant"]
       }
     }
-  }
+  },
+  "etags": {}
 }
