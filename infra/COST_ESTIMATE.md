@@ -1,51 +1,28 @@
-# Cost estimate — Firebase Hosting + Cloud Run + Cloud SQL
+# Preliminary infrastructure cost review (Path B)
 
-Assumes Google **new-customer $300 / 90-day** trial eligibility (confirm in console after `gcloud auth login`). Billing alerts are **not** hard caps.
+**Not live-verified** — dedicated NestHub project / billing link not configured yet. Distinguishes estimates from measured spend.
 
-Region assumption: **`asia-south1`** (recommended). Cloud Run Tier 1 unit rates also apply in `africa-south1`.
+## Components
 
-## Free / low-cost anchors (verify in current docs)
+| Service | Role | Free / trial notes | Staging estimate | Production lean estimate |
+|---|---|---|---|---|
+| Firebase Hosting | Static SPAs + `/api` rewrites | Spark limited; **Blaze** needed for Cloud Run rewrites | ~$0–5 | ~$0–15 |
+| Cloud Run | Spring Boot API | Request-based free tier (account-level) | ~$0–10 with min=0 | ~$5–40 |
+| Cloud Build | Remote Docker builds | Limited free build-minutes/day | cents–$ few per build | same |
+| Artifact Registry | Images | Low storage | <$3 | <$5 |
+| Secret Manager | DB/JWT secrets | Low access volume | <$1 | <$2 |
+| Cloud SQL PostgreSQL | System of record | No useful always-free prod DB | **~$20–70** (dominant) | **~$50–120** dedicated-core |
+| Logging / Monitoring | Ops | Free allotments then billable | usually small at staging | monitor growth |
+| **Total** | | $300 / 90-day trial may cover early staging | **~$20–70/mo** | **~$60–180/mo** |
 
-| Service | Typical free / low starting point |
-|---|---|
-| Cloud Run | Monthly free tier (request-based): 2M requests, 360k vCPU-seconds, 180k GiB-seconds (account-level) |
-| Firebase Hosting | Free Spark / Blaze: generous static storage + transfer for small sites; Blaze required for Cloud Run rewrites |
-| Artifact Registry | Small image storage; low cents–dollars |
-| Secret Manager | First secrets/versions often pennies at staging scale |
-| Cloud SQL | **No meaningful always-free production DB** — dominant cost |
+## Cost risks
 
-## Staging (minimal)
+- Cloud SQL left running 24/7 (largest fixed cost)
+- Cloud Run min instances > 0
+- Uncapped SQL storage autogrowth
+- HA without approval (~2× DB)
+- High Cloud Build frequency without cache
 
-| Component | Spec | Rough monthly after free tier |
-|---|---|---|
-| Cloud SQL | Enterprise **shared-core or 1 vCPU / ~0.6–3.75 GiB**, **10–20 GB** SSD, **no HA**, storage autogrowth **capped**, automated backups on | **~$15–55** (shared-core if available; else ~$45–70 for 1 vCPU/3.75 GiB) |
-| Cloud Run | Request-based billing, **min instances = 0**, **max = 3**, 1 vCPU / 512 MiB | **~$0–10** at low traffic |
-| Artifact Registry + Secret Manager | Staging only | **<$3** |
-| Firebase Hosting | Static SPA (+ optional `/api` rewrite) | **~$0–5** |
-| **Staging total** | | **~$20–70 / month** (often covered by $300 trial for weeks–months) |
+## Controls (after project exists)
 
-### Staging controls
-
-- `minScale=0`, request-based billing
-- `maxScale=3` (or 2)
-- Cloud SQL storage autogrowth **limit** set (e.g. 20–40 GB)
-- No HA
-- Budget alerts: **$5, $10, $20, $50**
-
-## Production (integrity over micro-savings)
-
-| Component | Spec | Rough monthly |
-|---|---|---|
-| Cloud SQL | Dedicated-core **1 vCPU / 3.75 GiB** (or 2 vCPU if load requires), **20–50 GB** SSD, **no HA initially**, automated backups + PITR, **deletion protection**, private IP | **~$50–120** |
-| Cloud Run | min 0 (or min 1 only if cold-start SLA requires), max 5–10, 1 vCPU / 512–1 GiB | **~$5–40** depending on traffic |
-| Firebase Hosting | Production site(s) | **~$0–15** |
-| Secrets / registry | | **<$5** |
-| **Production total (lean)** | | **~$60–180 / month** |
-
-**Do not** put production financial/property records on an unsupported shared-core tier merely to save money.  
-**Do not** use the short Cloud SQL free-trial instance for production.  
-Enable HA only with explicit approval (~2× DB compute).
-
-## Budget alerts (not caps)
-
-Create budgets on the billing account with thresholds at **$5 / $10 / $20 / $50**. Alerts notify; they do **not** stop spend unless a separate programmatic control is added.
+Budget alerts at $5 / $10 / $20 / $50 (alerts ≠ hard caps). Cloud Run min=0, max≤3 for staging. Cap SQL storage autogrowth.

@@ -1,54 +1,25 @@
-# SIONA NestHub — low-cost GCP staging runbook
+# Staging runbook (Path B)
 
-## Architecture (approved direction)
+See **`infra/PATH_B.md`** for architecture, URL rules, deploy, and rollback.
 
-| Layer | Service |
-|---|---|
-| Frontend + tenant SPA | **Firebase Hosting** (not Cloudflare Workers) |
-| API | **Cloud Run** (Spring Boot Java 17 container) |
-| DB | **Cloud SQL PostgreSQL** + Flyway |
-| Images | **Artifact Registry** |
-| Secrets | **Secret Manager** |
-| DNS | **Cloudflare DNS only** (no app hosting on Cloudflare) |
+## Cloud Run / SQL identifiers (proposed — not created)
 
-Recommended compute/DB region: **`asia-south1`** (see `REGION_COMPARISON.md`).
+- Region: `asia-south1`
+- Cloud Run staging: `nesthub-api-staging`
+- Cloud Run production: `nesthub-api`
+- Firebase Hosting targets: `main` (frontend), `tenant` (tenant-portal)
 
-## Safe sequence (stop at each approval gate)
-
-1. Local toolchain OK (JDK 17, Maven, Node, Firebase CLI). Docker still required for image build.
-2. `gcloud auth login` + select/create **dedicated SIONA staging project** (user supplies IDs).
-3. Confirm trial/billing; set budget alerts $5/$10/$20/$50.
-4. **Approve** enabling APIs: `run`, `sqladmin`, `secretmanager`, `artifactregistry`, `firebase`, `firebasehosting` (Blaze required for Cloud Run rewrites).
-5. Build frontends + backend JAR/image.
-6. **Approve** Cloud SQL staging create (smallest suitable, no HA, storage cap).
-7. Store DB/JWT secrets in Secret Manager (never commit).
-8. **Approve** Cloud Run staging deploy (`min=0`, `max=3`, request-based).
-9. Wire `.firebaserc` project/site IDs; `firebase deploy --only hosting` to **preview / default Hosting URL only**.
-10. Test health, Flyway, register/login, property create — test data only.
-11. Only after pass: approve custom domain / Cloudflare DNS for `nesthub.sionaglobal.com`.
-
-## Frontend API wiring
-
-**Preferred (same-origin):** Firebase Hosting rewrite `/api/**` → Cloud Run (`firebase.json`). Build with:
+## Local commands
 
 ```bash
-VITE_API_URL=   # empty / relative — browser calls /api on the Hosting origin
+node infra/scripts/test-api-base-url.mjs
+cd frontend && npm ci && npm run build
+cd tenant-portal && npm ci && npm run build
+export JAVA_HOME=~/tools/jdk-17.0.21+9
+export PATH="$JAVA_HOME/bin:$HOME/tools/apache-maven-3.9.16/bin:$PATH"
+cd backend && mvn -B -DskipTests package
 ```
 
-Or set `VITE_API_URL=""` explicitly at build time.
+## Stop conditions
 
-**Fallback:** `VITE_API_URL=https://SERVICE-XXXX.asia-south1.run.app` — requires CORS env change approval.
-
-## Docker image (after Docker Desktop installed)
-
-```bash
-docker build -t asia-south1-docker.pkg.dev/PROJECT/nesthub/backend:staging -f backend/Dockerfile backend
-```
-
-## Remotes / branch
-
-- Branch: `infra/siona-cloud-deployment`
-- Push: `origin` only (`Siona-Technologies/siona-nesthub`)
-- Never push `upstream` (`NestHub254/nesthub`)
-- Do not merge to `main` in this phase
-- Do not touch `siona-property`
+No project create, API enablement, Cloud SQL/Run/Hosting deploy, or DNS changes without explicit approval.
