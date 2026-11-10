@@ -3,10 +3,12 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Building2, Users2, ClipboardList, UserPlus } from 'lucide-react';
 import { api, saveSession } from '../api/client.js';
 import { GoogleIcon, AppleIcon, GithubIcon } from '../components/SocialIcons.jsx';
+import { useRobotsMeta } from '../seo/useRobotsMeta.js';
 
 // Owner-only. Managers, maintenance, and tenants get their login created for them
 // inside a dashboard (see OwnerHome / ManagerHome) — this form never appears to them.
 export default function Register() {
+  useRobotsMeta('noindex, nofollow');
   const navigate = useNavigate();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);

@@ -1,0 +1,35 @@
+# Remote image build for Cloud Run (preferred over local Docker Desktop).
+# Do NOT run until a dedicated SIONA NestHub GCP project ID is provided and approved.
+#
+# From repository root (after approval):
+#   gcloud builds submit --config=cloudbuild.yaml \
+#     --substitutions=_REGION=asia-south1,_REPO=nesthub,_IMAGE=backend,_TAG=staging \
+#     .
+#
+# Required APIs (enable only after approval): cloudbuild.googleapis.com,
+# artifactregistry.googleapis.com, run.googleapis.com
+
+substitutions:
+  _REGION: asia-south1
+  _REPO: nesthub
+  _IMAGE: backend
+  _TAG: staging
+
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:${_TAG}
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:$SHORT_SHA
+      - -f
+      - backend/Dockerfile
+      - backend
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:${_TAG}
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:$SHORT_SHA
+
+options:
+  logging: CLOUD_LOGGING_ONLY

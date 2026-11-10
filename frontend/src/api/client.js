@@ -1,6 +1,8 @@
-// Talks directly to the Spring Boot backend. Set VITE_API_URL in a .env file
-// (e.g. VITE_API_URL=http://localhost:8080) - never hardcode the deployed URL here.
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+import { resolveApiBaseUrl } from './baseUrl.js';
+
+// Path B default: relative /api on the Firebase Hosting origin.
+// Local Vite → Spring Boot: set VITE_API_URL=http://localhost:8080 in .env.local (gitignored).
+const BASE_URL = resolveApiBaseUrl(import.meta.env.VITE_API_URL);
 
 function getToken() {
   return localStorage.getItem('nesthub-token');
@@ -43,3 +45,5 @@ export function clearSession() {
   localStorage.removeItem('nesthub-token');
   localStorage.removeItem('nesthub-user');
 }
+
+export { resolveApiBaseUrl };

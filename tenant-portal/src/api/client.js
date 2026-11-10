@@ -1,4 +1,8 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+import { resolveApiBaseUrl } from './baseUrl.js';
+
+// Path B default: relative /api on the Firebase Hosting origin.
+// Local Vite → Spring Boot: set VITE_API_URL=http://localhost:8080 in .env.local (gitignored).
+const API_BASE = resolveApiBaseUrl(import.meta.env.VITE_API_URL);
 const SESSION_KEY = 'nesthub_tenant_session';
 
 export async function api(path, options = {}) {
@@ -54,3 +58,5 @@ export function isValidKenyanPhone(value) {
   // Accepts 07XXXXXXXX, 01XXXXXXXX, or +2547XXXXXXXX / +2541XXXXXXXX
   return /^(?:\+254|0)(7|1)\d{8}$/.test((value || '').trim());
 }
+
+export { resolveApiBaseUrl };

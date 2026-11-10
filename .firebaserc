@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "siona-nesthub-staging-2026",
+    "staging": "siona-nesthub-staging-2026"
+  },
+  "targets": {
+    "siona-nesthub-staging-2026": {
+      "hosting": {
+        "main": ["siona-nesthub-staging-2026"],
+        "tenant": ["siona-nesthub-staging-tenant"]
+      }
+    }
+  },
+  "etags": {}
+}

@@ -7,6 +7,7 @@ import TenantHome from './pages/tenant/TenantHome.jsx';
 import OwnerHome from './pages/owner/OwnerHome.jsx';
 import ManagerHome from './pages/manager/ManagerHome.jsx';
 import MaintenanceHome from './pages/maintenance/MaintenanceHome.jsx';
+import { useRobotsMeta } from './seo/useRobotsMeta.js';
 
 const roleHome = {
   tenant: TenantHome,
@@ -22,6 +23,7 @@ function RequireAuth({ children }) {
 }
 
 function Dashboard() {
+  useRobotsMeta('noindex, nofollow');
   const session = getSession();
   const Home = roleHome[session?.role] || TenantHome;
   return <Home session={session} />;

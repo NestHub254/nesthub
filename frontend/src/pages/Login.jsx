@@ -3,8 +3,10 @@ import { useNavigate, Link } from 'react-router-dom';
 import { KeyRound, ShieldCheck, Wrench } from 'lucide-react';
 import { api, saveSession } from '../api/client.js';
 import { GoogleIcon, AppleIcon, GithubIcon } from '../components/SocialIcons.jsx';
+import { useRobotsMeta } from '../seo/useRobotsMeta.js';
 
 export default function Login() {
+  useRobotsMeta('noindex, nofollow');
   const navigate = useNavigate();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);

@@ -1,0 +1,4 @@
+# NestHub tenant portal — site-wide X-Robots-Tag: noindex, nofollow is set by Hosting headers.
+# Allow crawlers to discover those headers; do not blanket-disallow the site here.
+User-agent: *
+Allow: /

@@ -1,0 +1,82 @@
+# Reference Cloud Run service config for staging.
+# Do not apply until GCP project, billing, and secret values are approved.
+#
+# Suggested deploy (after approval):
+#   gcloud run services replace infra/cloud-run/service.staging.yaml --region=asia-south1
+#
+# Or:
+#   gcloud run deploy nesthub-api-staging \
+#     --image=REGION-docker.pkg.dev/PROJECT/nesthub/backend:staging \
+#     --region=asia-south1 \
+#     --platform=managed \
+#     --allow-unauthenticated \
+#     --port=8080 \
+#     --min-instances=0 \
+#     --max-instances=3 \
+#     --cpu=1 \
+#     --memory=512Mi \
+#     --set-secrets=NESTHUB_DB_URL=nesthub-staging-db-url:latest,NESTHUB_DB_USERNAME=nesthub-staging-db-user:latest,NESTHUB_DB_PASSWORD=nesthub-staging-db-password:latest,NESTHUB_JWT_SECRET=nesthub-staging-jwt:latest \
+#     --set-env-vars=NESTHUB_CORS_ORIGINS=https://staging-nesthub.sionaglobal.com
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: nesthub-api-staging
+  annotations:
+    run.googleapis.com/launch-stage: GA
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "0"
+        autoscaling.knative.dev/maxScale: "3"
+        run.googleapis.com/cpu-throttling: "true"
+        run.googleapis.com/startup-cpu-boost: "true"
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 300
+      containers:
+        - image: REPLACE_WITH_ARTIFACT_REGISTRY_IMAGE
+          ports:
+            - name: http1
+              containerPort: 8080
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi
+          env:
+            - name: PORT
+              value: "8080"
+            # Secrets must be bound from Secret Manager after approval — do not inline values.
+            - name: NESTHUB_DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: nesthub-staging-db-url
+                  key: latest
+            - name: NESTHUB_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: nesthub-staging-db-user
+                  key: latest
+            - name: NESTHUB_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nesthub-staging-db-password
+                  key: latest
+            - name: NESTHUB_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: nesthub-staging-jwt
+                  key: latest
+          startupProbe:
+            httpGet:
+              path: /api/health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 24
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 8080
+            periodSeconds: 30

@@ -253,7 +253,9 @@ export default function Landing() {
             <div className="lp-hero-frame">
               <img
                 src="https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=1200&q=80"
-                alt="Modern apartment building exterior"
+                alt="Apartment building facade representing multi-unit rental property management in Kenya"
+                width="1200"
+                height="800"
                 loading="lazy"
               />
             </div>
@@ -340,7 +342,9 @@ export default function Landing() {
           <div className="lp-highlight-image reveal" data-reveal="right">
             <img
               src="https://images.unsplash.com/photo-1554469384-e58fac16e23a?auto=format&fit=crop&w=1200&q=80"
-              alt="Property dashboard on a laptop"
+              alt="Laptop showing a property management dashboard for rental operations"
+              width="1200"
+              height="800"
               loading="lazy"
             />
             <div className="lp-dashboard-card large card-revenue">
@@ -630,10 +634,20 @@ export default function Landing() {
         </div>
 
         <div className="lp-footer-bottom">
-          <span>© {new Date().getFullYear()} NestHub · Rental living, simplified.</span>
+          <div className="lp-footer-bottom-copy">
+            <span>© {new Date().getFullYear()} NestHub · Rental living, simplified.</span>
+            <a
+              className="lp-footer-partner"
+              href="https://sionaglobal.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              In partnership with SIONA Technologies Limited.
+            </a>
+          </div>
           <div className="lp-footer-legal">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
+            <a href="/privacy/">Privacy Policy</a>
+            <a href="/data-deletion/">Data Deletion</a>
           </div>
         </div>
       </footer>

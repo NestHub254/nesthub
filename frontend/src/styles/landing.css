@@ -489,10 +489,16 @@ section.lp-section-muted{ padding:5.5rem 4rem; }
 .lp-footer-col a{ display:block; font-size:.86rem; color:var(--ink-soft); padding:6px 0; transition:color .2s ease; }
 .lp-footer-col a:hover{ color:var(--primary); }
 .lp-footer-bottom{
-  display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;
+  display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1rem;
   padding-top:2rem; border-top:1px solid var(--line); font-size:.82rem; color:var(--ink-faint);
 }
-.lp-footer-legal{ display:flex; gap:1.4rem; }
+.lp-footer-bottom-copy{ display:flex; flex-direction:column; gap:.35rem; max-width:36rem; }
+.lp-footer-partner{
+  color:var(--ink-faint); font-size:.78rem; letter-spacing:.01em; text-decoration:none;
+  width:fit-content;
+}
+.lp-footer-partner:hover{ color:var(--primary); }
+.lp-footer-legal{ display:flex; gap:1.4rem; flex-wrap:wrap; }
 .lp-footer-legal a:hover{ color:var(--primary); }
 
 /* ===================== responsive ===================== */
