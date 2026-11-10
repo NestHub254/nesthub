@@ -1,43 +1,27 @@
 # NestHub Privacy Policy
 
-**Status:** Published (partner-approved public copy)  
+**Status:** Published (SIONA compliance update)  
 **Public page:** `frontend/public/privacy/index.html` → `https://nesthub.sionaglobal.com/privacy/`  
 **Last updated:** 10 November 2026
 
-This markdown mirrors the approved public privacy policy. NestHub remains responsible for NestHub product, customer, and property-related privacy decisions. SIONA Technologies Limited is the technology partner for hosting and related engineering. This policy does not treat the parties as joint controllers.
+NestHub is offered in partnership with SIONA Technologies Limited. NestHub remains the partner’s product. SIONA provides agreed operational data-management, privacy administration and data-protection compliance support under the technology partnership. The parties are not treated as joint controllers unless a written arrangement says so.
 
----
+## ODPC registration (SIONA) — verified from certificates
 
-## Parties
+| Field | Verified value |
+|---|---|
+| Entity | SIONA TECHNOLOGIES LIMITED |
+| Identification | 964-900E-BFFD |
+| Capacities | Data Controller (serial 33476) and Data Processor (serial 33477) |
+| Validity shown | 10 November 2026 – 10 November 2028 |
 
-| Party | Role | Verified public facts |
-|---|---|---|
-| NestHub (and its operating partner) | NestHub product operator; primary contact for NestHub users | Site `https://nesthub.sionaglobal.com/`; email `hello@nesthub.app`; phone/WhatsApp `+254 701 388 400` |
-| SIONA Technologies Limited | Technology partner (hosting / engineering) | `https://sionaglobal.com`; does not own NestHub brand or partner property data |
+Dual registration does **not** make SIONA the controller of every landlord’s or tenant’s NestHub personal data.
 
-## Verified NestHub data categories (from repository)
+## Contacts (NestHub product)
 
-Present in application entities / auth flows:
+- Email: `hello@nesthub.app`
+- Phone / WhatsApp: `+254 701 388 400`
 
-- User: full name, email, password hash, role, property association, unit label, phone, created timestamp
-- Property: name, address, owner id, created timestamp
-- Client session tokens for signed-in users
-- Public demo/contact form fields (name, email, phone, property name, message) via Formspree endpoint configured in `Landing.jsx`
+## Public HTML is authoritative for website visitors
 
-Schema also defines leases, payments, tickets, announcements, and staff messages. Those are **product design**, not asserted here as live production processing unless NestHub has enabled the corresponding services.
-
-## SIONA technology-provider processing
-
-SIONA may process:
-
-- Hosting request/security logs and diagnostics for NestHub web surfaces it operates
-- Deployment and infrastructure metadata
-- Limited support correspondence related to NestHub infrastructure
-
-SIONA does not use NestHub customer data for SIONA marketing.
-
-## User rights and contacts
-
-- NestHub product requests: `hello@nesthub.app`
-- Deletion instructions: `/data-deletion/`
-- Technology-partner context: https://sionaglobal.com
+Keep this markdown aligned with `frontend/public/privacy/index.html`.
