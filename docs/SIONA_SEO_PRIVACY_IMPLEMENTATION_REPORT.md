@@ -22,7 +22,7 @@ Marketing claims flagged (left on NestHub landing; omitted from structured data)
 
 Details: `docs/SEO_IMPLEMENTATION_REPORT.md`
 
-## 2. Shared privacy policy draft
+## 2. Shared privacy policy
 
 - Public HTML: `/privacy/`
 - Working markdown: `docs/PRIVACY_POLICY.md`
@@ -30,8 +30,7 @@ Details: `docs/SEO_IMPLEMENTATION_REPORT.md`
 - Does **not** declare joint controllership
 - Distinguishes verified user/property auth data from schema-only leases/payments/tickets
 - Discloses Formspree demo-form endpoint as configured in code
-
-Partner confirmations checklist: `docs/PRIVACY_PARTNER_CONFIRMATIONS.md`
+- Partner-approved for public publication; internal partner confirmation checklist retained offline only (not in public repo)
 
 ## 3. Data deletion documentation
 
@@ -93,20 +92,17 @@ Screenshots in `docs/screenshots/`:
 ### Completed (SIONA)
 
 - Technical SEO + indexing controls
-- Privacy draft + deletion docs + partner confirmation checklist
+- Privacy + deletion docs (partner-approved public copy)
 - Footer attribution and legal navigation
 - Hosting security / robots headers
 - Local builds, static-file validation, screenshots, reports
 
 ### Outstanding external / partner
 
-1. Approve and deploy these changes
-2. Finish Cloudflare DNS so `nesthub.sionaglobal.com` is Connected + SSL live
-3. Google Search Console verification with a real token
-4. NestHub legal/privacy confirmations in `docs/PRIVACY_PARTNER_CONFIRMATIONS.md`
-5. Substantiate or revise marketing metrics / payment claims
-6. NestHub Terms of Service (not authored here)
-7. Optional richer PNG Open Graph asset
+1. Google Search Console verification with a real token
+2. Substantiate or revise marketing metrics / payment claims
+3. NestHub Terms of Service (not authored here; footer omits Terms until approved text exists)
+4. Optional richer PNG Open Graph asset
 
 ### Explicitly not done (out of SIONA scope)
 

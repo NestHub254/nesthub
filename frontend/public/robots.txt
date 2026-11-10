@@ -1,12 +1,6 @@
 # NestHub public marketing site — https://nesthub.sionaglobal.com
 User-agent: *
 Allow: /
-Allow: /privacy/
-Allow: /data-deletion/
-Disallow: /login
-Disallow: /register
-Disallow: /app
-Disallow: /app/
 Disallow: /api/
 
 Sitemap: https://nesthub.sionaglobal.com/sitemap.xml

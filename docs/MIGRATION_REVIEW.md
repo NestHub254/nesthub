@@ -4,7 +4,7 @@
 **Branch:** `siona/hosting-seo-migration`  
 **Tip commit:** see `git rev-parse HEAD` on this branch (includes infra + SEO/privacy commits)  
 **PR:** https://github.com/NestHub254/nesthub/pull/1  
-**Status:** Pre-merge cleanup complete. **Not merged. Not deployed.**
+**Status:** Partner-approved legal pages finalized; static-release config added. Proceeding to merge and static Hosting deploy under SIONA authorization.
 
 ## 1. Source workspaces (logical)
 
@@ -46,10 +46,11 @@ Included on this branch:
 
 - Firebase security / robots headers  
 - Frontend SEO metadata + partnership footer  
-- Privacy + data-deletion **draft** static pages  
+- Privacy + data-deletion published static pages (partner-approved)  
 - robots.txt / sitemap.xml  
 - Sanitized docs under `docs/`  
 - Sanitized `infra/GCP_PROJECT_STATUS.md`  
+- `firebase.static-release.json` (static-only Hosting; no Cloud Run rewrites)  
 
 ## 5. Files excluded for public-repo security
 
@@ -58,6 +59,7 @@ Kept only in private SIONA backup / private clone:
 - Internal QA screenshots  
 - Personal operator account identifiers previously present in GCP status notes  
 - Raw billing-account enumeration wording  
+- Internal `PRIVACY_PARTNER_CONFIRMATIONS.md` (removed from public repo; offline private copy retained)  
 
 Secret pattern scan on the public migration contents: **0 credential hits** (see pre-merge cleanup).
 

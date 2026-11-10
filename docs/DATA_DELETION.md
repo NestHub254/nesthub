@@ -1,9 +1,9 @@
-# NestHub data deletion — SIONA documentation
+# NestHub data deletion
 
-**Status:** DRAFT — pending NestHub partner and legal approval. Not final.  
-**Public page:** `frontend/public/data-deletion/index.html` → `https://nesthub.sionaglobal.com/data-deletion/` (draft page)  
-**Footer link:** added on NestHub marketing footer  
-**Type of work:** documentation / disclosure only (no deletion backend built)
+**Status:** Published (partner-approved public copy)  
+**Public page:** `frontend/public/data-deletion/index.html` → `https://nesthub.sionaglobal.com/data-deletion/`  
+**Footer link:** NestHub marketing footer  
+**Type of work:** documentation / disclosure only (no deletion backend built; no account-deletion API claimed)
 
 ## Request channel
 
@@ -23,13 +23,13 @@ NestHub verifies requester identity (for example control of the registered email
 
 ## Legal retention
 
-If retention is required for a verified legal, dispute, security, or accounting reason, NestHub should tell the requester what was retained and why. No fixed SLA is published until NestHub approves one.
+If retention is required for a verified legal, dispute, security, or accounting reason, NestHub should tell the requester what was retained and why.
 
 ## Confirmation
 
 NestHub sends email confirmation of outcome. Confirmation must not expose other people’s personal data.
 
-## Out of scope for this SIONA task
+## Out of scope
 
 - Account-deletion API
 - Database wipe workflows
