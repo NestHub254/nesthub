@@ -1,77 +1,54 @@
-# SIONA NestHub — staging runbook (preparation)
+# SIONA NestHub — low-cost GCP staging runbook
 
-## Architecture
+## Architecture (approved direction)
 
-| Layer | Target |
+| Layer | Service |
 |---|---|
-| Main frontend | Cloudflare Workers Assets → `staging-nesthub.sionaglobal.com` |
-| Tenant portal | Cloudflare Workers Assets (optional staging worker) |
-| API | Google Cloud Run → `staging-api.nesthub.sionaglobal.com` (DNS later) |
-| DB | Google Cloud SQL PostgreSQL 16, `africa-south1` |
+| Frontend + tenant SPA | **Firebase Hosting** (not Cloudflare Workers) |
+| API | **Cloud Run** (Spring Boot Java 17 container) |
+| DB | **Cloud SQL PostgreSQL** + Flyway |
+| Images | **Artifact Registry** |
+| Secrets | **Secret Manager** |
+| DNS | **Cloudflare DNS only** (no app hosting on Cloudflare) |
 
-Production hostnames (`nesthub.sionaglobal.com`, `api.nesthub.sionaglobal.com`) must not be changed in this phase.
+Recommended compute/DB region: **`asia-south1`** (see `REGION_COMPARISON.md`).
 
-## Local toolchain
+## Safe sequence (stop at each approval gate)
 
-- JDK 17, Maven 3.9+, Node 20+, Docker Desktop (for image builds), gcloud, Wrangler 4.15x
-- Cloudflare: use SIONA account already authenticated via Wrangler
-- GCP: run `gcloud auth login` and `gcloud config set project PROJECT_ID` (user must supply project)
+1. Local toolchain OK (JDK 17, Maven, Node, Firebase CLI). Docker still required for image build.
+2. `gcloud auth login` + select/create **dedicated SIONA staging project** (user supplies IDs).
+3. Confirm trial/billing; set budget alerts $5/$10/$20/$50.
+4. **Approve** enabling APIs: `run`, `sqladmin`, `secretmanager`, `artifactregistry`, `firebase`, `firebasehosting` (Blaze required for Cloud Run rewrites).
+5. Build frontends + backend JAR/image.
+6. **Approve** Cloud SQL staging create (smallest suitable, no HA, storage cap).
+7. Store DB/JWT secrets in Secret Manager (never commit).
+8. **Approve** Cloud Run staging deploy (`min=0`, `max=3`, request-based).
+9. Wire `.firebaserc` project/site IDs; `firebase deploy --only hosting` to **preview / default Hosting URL only**.
+10. Test health, Flyway, register/login, property create — test data only.
+11. Only after pass: approve custom domain / Cloudflare DNS for `nesthub.sionaglobal.com`.
 
-## Required application change (approval gate)
+## Frontend API wiring
 
-`application.yml` currently hardcodes CORS to localhost. Staging browsers on `https://staging-nesthub.sionaglobal.com` will be blocked until CORS is env-driven, e.g.:
-
-```yaml
-app:
-  cors:
-    allowed-origins: ${NESTHUB_CORS_ORIGINS:http://localhost:5173,http://localhost:5174}
-```
-
-**Do not apply until explicitly approved.** No business controllers/entities/frontend UX changes are required for deployability beyond this config.
-
-## Build commands (safe / local)
-
-```bash
-# Backend (from backend/)
-mvn -B -DskipTests package
-
-# Frontends with staging API URL
-cd frontend && VITE_API_URL=https://staging-api.nesthub.sionaglobal.com npm run build
-cd tenant-portal && VITE_API_URL=https://staging-api.nesthub.sionaglobal.com npm run build
-
-# Container image (requires Docker)
-docker build -t nesthub-backend:staging -f backend/Dockerfile backend
-```
-
-## Cloudflare staging deploy (after approval to expose)
+**Preferred (same-origin):** Firebase Hosting rewrite `/api/**` → Cloud Run (`firebase.json`). Build with:
 
 ```bash
-cd frontend
-npx wrangler deploy -c wrangler.staging.jsonc
-# Then attach custom domain in dashboard or uncomment routes — do not touch production Workers
+VITE_API_URL=   # empty / relative — browser calls /api on the Hosting origin
 ```
 
-## GCP staging (after cost + project approval)
+Or set `VITE_API_URL=""` explicitly at build time.
 
-1. Enable APIs: `run`, `sqladmin`, `secretmanager`, `artifactregistry`, `cloudbuild` (only if approved)
-2. Create Cloud SQL per `infra/cloud-sql/staging.md`
-3. Create secrets; never echo values
-4. Build/push image to Artifact Registry
-5. Deploy Cloud Run per `infra/cloud-run/service.staging.yaml`
-6. Map `staging-api.nesthub.sionaglobal.com` (Cloudflare DNS → Cloud Run) only when approved
+**Fallback:** `VITE_API_URL=https://SERVICE-XXXX.asia-south1.run.app` — requires CORS env change approval.
 
-## Acceptance tests (after staging is live)
+## Docker image (after Docker Desktop installed)
 
-1. `GET /api/health` → `{ status: ok }`
-2. Flyway tables present (`flyway_schema_history`, `users`, `properties`, …)
-3. Owner register + login
-4. Create property + list `/api/properties/mine`
-5. Non-owner cannot create property
-6. Frontend calls staging API successfully (CORS)
-7. Tenant portal builds/loads (dashboard still largely mock — do not claim production-ready)
+```bash
+docker build -t asia-south1-docker.pkg.dev/PROJECT/nesthub/backend:staging -f backend/Dockerfile backend
+```
 
-## Remotes
+## Remotes / branch
 
-- Push only to `origin` (`Siona-Technologies/siona-nesthub`)
-- Never push to `upstream` (`NestHub254/nesthub`)
-- Work on `infra/siona-cloud-deployment` — do not merge to `main` in this phase
+- Branch: `infra/siona-cloud-deployment`
+- Push: `origin` only (`Siona-Technologies/siona-nesthub`)
+- Never push `upstream` (`NestHub254/nesthub`)
+- Do not merge to `main` in this phase
+- Do not touch `siona-property`

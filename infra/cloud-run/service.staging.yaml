@@ -2,12 +2,12 @@
 # Do not apply until GCP project, billing, and secret values are approved.
 #
 # Suggested deploy (after approval):
-#   gcloud run services replace infra/cloud-run/service.staging.yaml --region=africa-south1
+#   gcloud run services replace infra/cloud-run/service.staging.yaml --region=asia-south1
 #
 # Or:
 #   gcloud run deploy nesthub-api-staging \
 #     --image=REGION-docker.pkg.dev/PROJECT/nesthub/backend:staging \
-#     --region=africa-south1 \
+#     --region=asia-south1 \
 #     --platform=managed \
 #     --allow-unauthenticated \
 #     --port=8080 \
