@@ -1,5 +1,7 @@
 # Partner privacy confirmations (internal)
 
+**Status:** Outstanding — privacy and data-deletion drafts remain pending NestHub partner and legal approval.
+
 Needed from NestHub / its operating partner before the shared privacy policy can be marked final and before stronger legal wording is published.
 
 SIONA must not invent these answers.

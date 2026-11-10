@@ -1,10 +1,10 @@
 # NestHub Privacy Policy (shared draft)
 
-**Status:** Draft for NestHub + SIONA production approval  
-**Public mirror:** `frontend/public/privacy/index.html` → `https://nesthub.sionaglobal.com/privacy/`  
+**Status:** DRAFT — pending NestHub partner and legal approval. Not final.  
+**Public mirror:** `frontend/public/privacy/index.html` → `https://nesthub.sionaglobal.com/privacy/` (draft page)  
 **Last updated:** 10 November 2026
 
-This markdown is the shared working draft. The public HTML page is the website copy. Do not invent partner legal identity details beyond what NestHub has already published on the marketing site.
+This markdown is the shared working draft only. The public HTML page is the website draft copy. Do not treat either as an approved production policy until NestHub explicitly confirms. Do not invent partner legal identity details beyond what NestHub has already published on the marketing site.
 
 ---
 

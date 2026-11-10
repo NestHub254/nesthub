@@ -1,6 +1,7 @@
 # NestHub data deletion — SIONA documentation
 
-**Public page:** `frontend/public/data-deletion/index.html` → `https://nesthub.sionaglobal.com/data-deletion/`  
+**Status:** DRAFT — pending NestHub partner and legal approval. Not final.  
+**Public page:** `frontend/public/data-deletion/index.html` → `https://nesthub.sionaglobal.com/data-deletion/` (draft page)  
 **Footer link:** added on NestHub marketing footer  
 **Type of work:** documentation / disclosure only (no deletion backend built)
 

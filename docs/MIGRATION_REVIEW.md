@@ -1,33 +1,28 @@
 # NestHub migration review — SIONA → partner primary repo
 
 **Prepared:** 10 November 2026  
-**Working copy:** `C:\Users\njaji\Projects\nesthub-partner`  
 **Branch:** `siona/hosting-seo-migration`  
-**HEAD (committed infra):** `6cff6752b8145dece69df5e0c0c01fe5bec3c5b7`  
-**Status:** Validated locally. **Not committed beyond the fast-forwarded infra commits. Not pushed.**
+**Tip commit:** see `git rev-parse HEAD` on this branch (includes infra + SEO/privacy commits)  
+**PR:** https://github.com/NestHub254/nesthub/pull/1  
+**Status:** Pre-merge cleanup complete. **Not merged. Not deployed.**
 
-## 1. Original SIONA workspace
+## 1. Source workspaces (logical)
 
-| Item | Value |
+| Workspace | Role |
 |---|---|
-| Path | `C:\Users\njaji\Projects\siona-nesthub` |
-| Branch | `infra/siona-cloud-deployment` |
-| HEAD | `6cff6752b8145dece69df5e0c0c01fe5bec3c5b7` |
-| Remotes | `origin` → Siona-Technologies/siona-nesthub; `upstream` → NestHub254/nesthub (`no_push`) |
-| Local state | Preserved with SEO/privacy working-tree changes still present |
+| Private SIONA clone / backup | Historical SIONA working copy and offline backup of SEO/privacy drafts |
+| Partner clone | Primary working copy for NestHub254/nesthub |
 
-External backup:  
-`C:\Users\njaji\Projects\_migration-backups\siona-nesthub-hosting-seo-2026-11-10`
+Absolute local filesystem paths are intentionally omitted from this public document.
 
-## 2. New partner workspace
+## 2. Partner repository remotes
 
-| Item | Value |
+| Remote | Repository |
 |---|---|
-| Path | `C:\Users\njaji\Projects\nesthub-partner` |
-| Branch | `siona/hosting-seo-migration` |
-| Remotes | `origin` → NestHub254/nesthub; `siona-backup` → Siona-Technologies/siona-nesthub |
-| Partner `origin/main` | `d758e75b75a86d6530cee76fbee2fafcbd596a2f` (MATCH expected) |
-| SIONA infra tip | `6cff675…` (MATCH expected) |
+| `origin` | NestHub254/nesthub |
+| `siona-backup` | Siona-Technologies/siona-nesthub |
+
+Partner `origin/main` baseline at branch creation: `d758e75b75a86d6530cee76fbee2fafcbd596a2f`.
 
 ## 3. History action
 
@@ -36,28 +31,35 @@ Created `siona/hosting-seo-migration` from `origin/main`, then **fast-forward-on
 
 Conflicts during FF: **none**.
 
-## 4. Local SEO/privacy transfer
+Included infrastructure commits:
 
-Applied SIONA working-tree patch + copied untracked SEO/privacy files.  
-Additional working-tree changes (uncommitted):
+1. `16279e5` — Cloud Run / Cloudflare staging scaffolding  
+2. `65efb7b` — Firebase Hosting + asia-south1 staging plan  
+3. `a0a9e13` — Path B same-origin API routing  
+4. `6cff675` — staging project wiring  
 
-- Firebase security / robots headers
-- Frontend SEO metadata + partnership footer
-- Privacy + data-deletion static pages
-- robots/sitemap
-- Sanitized docs under `docs/`
-- Sanitized `infra/GCP_PROJECT_STATUS.md`
+Subsequent SEO/privacy commit(s) follow on the same branch.
+
+## 4. SEO / privacy transfer
+
+Included on this branch:
+
+- Firebase security / robots headers  
+- Frontend SEO metadata + partnership footer  
+- Privacy + data-deletion **draft** static pages  
+- robots.txt / sitemap.xml  
+- Sanitized docs under `docs/`  
+- Sanitized `infra/GCP_PROJECT_STATUS.md`  
 
 ## 5. Files excluded for public-repo security
 
 Kept only in private SIONA backup / private clone:
 
-- `docs/screenshots/*` (internal QA screenshots)
-- Personal owner email previously in GCP status notes
-- GCP project number previously in GCP status notes
-- Raw billing-account enumeration wording
+- Internal QA screenshots  
+- Personal operator account identifiers previously present in GCP status notes  
+- Raw billing-account enumeration wording  
 
-Secret pattern scan on partner working tree: **0 hits**.
+Secret pattern scan on the public migration contents: **0 credential hits** (see pre-merge cleanup).
 
 `.env.example` and frontend/tenant env examples contain placeholders only.
 
@@ -65,7 +67,7 @@ Secret pattern scan on partner working tree: **0 hits**.
 
 | Check | Result |
 |---|---|
-| Main frontend build | Pass |
+| Main frontend build | Pass (re-run at pre-merge cleanup) |
 | Tenant portal build | Pass |
 | Backend `mvn -DskipTests package` | Pass |
 | `node infra/scripts/test-api-base-url.mjs` | Pass |
@@ -75,26 +77,22 @@ Secret pattern scan on partner working tree: **0 hits**.
 
 ## 7. Stopped before
 
-- Commit of SEO/privacy working tree
-- Push to partner remote
-- Merge to partner `main`
-- Firebase deploy / DNS / GCP provisioning
-- Deletion of private SIONA repo or old clone
+- Merge to partner `main`  
+- Firebase deploy / DNS / GCP provisioning  
+- Archive or deletion of private SIONA repo  
 
-
-## 8. Production audit (read-only, consolidation)
+## 8. Production audit (read-only)
 
 | Item | Finding |
 |---|---|
 | Live public URL | `https://nesthub.sionaglobal.com/` → CNAME `siona-nesthub-staging-2026.web.app` |
 | Firebase project serving the domain | `siona-nesthub-staging-2026` |
 | Custom domain state | `HOST_ACTIVE` / `OWNERSHIP_ACTIVE` / `CERT_ACTIVE` |
-| Live release | `1794319988678000` (version `b7460b73c8024597`, static SPA rewrites only) |
-| GitHub Actions deploy | None on NestHub254/nesthub or Siona-Technologies/siona-nesthub |
-| Cloud Build triggers | API not enabled / none |
-| Cloud Run / Cloud SQL / Secret Manager | Not provisioned (APIs disabled / empty) |
+| Live release (pre-merge check baseline) | `1794319988678000` (version `b7460b73c8024597`, static SPA rewrites only) |
+| GitHub Actions deploy | None observed on NestHub254/nesthub or Siona-Technologies/siona-nesthub |
+| Cloud Build / Cloud Run / Cloud SQL / Secret Manager | Not provisioned for this project path |
 | Billing on staging project | Disabled |
-| Deployment source | Manual Firebase Hosting upload to staging project — **not** Git-linked CI |
+| Deployment source | Manual Firebase Hosting upload — **not** Git-linked CI |
 | `.firebaserc` in this branch | Staging project only — **must not** be treated as a separate production Firebase project |
 
-**Implication:** Retiring the private Siona-Technologies/siona-nesthub GitHub repo does not by itself take down Hosting, because production is not CI-deployed from that repo. Archive only after NestHub254/nesthub is confirmed as the operational source of truth and any future deploy process is pointed there.
+**Implication:** Retiring the private Siona-Technologies/siona-nesthub GitHub repo does not by itself take down Hosting. Archive only after NestHub254/nesthub is confirmed as the operational source of truth for future deploys, with explicit approval.
