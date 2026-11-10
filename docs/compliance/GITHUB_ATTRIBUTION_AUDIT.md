@@ -1,8 +1,9 @@
 # GitHub Cursor attribution audit — NestHub254/nesthub
 
-**Status:** Audit record  
-**Date:** 10 November 2026  
-**Default branch:** `main` @ merge `ff95f3fb04dae8b3375418ec208ea15225e86883`
+**Status:** Audit record · PUBLIC-SAFE  
+**Date:** 10 November 2026 (updated with Option A release note)  
+**Default branch baseline:** `main` @ merge `ff95f3fb04dae8b3375418ec208ea15225e86883`  
+**Later compliance merge:** `8f49d428abdf05c68fe13f8308639d4e2c117bd6` (PR #2)
 
 ## Finding
 
