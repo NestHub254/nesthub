@@ -1,0 +1,3 @@
+# NestHub tenant portal — not public marketing content
+User-agent: *
+Disallow: /
