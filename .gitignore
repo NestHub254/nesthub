@@ -9,6 +9,8 @@ tenant-portal/dist/
 .env
 .env.*
 !.env.example
+!.env.staging
+!.env.production
 .idea/
 .vscode/
 *.iml
