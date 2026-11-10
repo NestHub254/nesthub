@@ -1,20 +1,24 @@
 # NestHub Privacy Policy
 
-**Status:** Published — Option A  
+**Status:** Published  
 **Public page:** `frontend/public/privacy/index.html` → `https://nesthub.sionaglobal.com/privacy/`  
-**Last updated:** 10 November 2026
+**Last updated:** 11 November 2026
 
-NestHub is offered in partnership with SIONA Technologies Limited. NestHub remains the partner’s product.
+## Privacy and data handling
 
-## Option A roles
+NestHub is a property management platform designed to help property owners and property management businesses manage their operations.
 
-- Property owners / property-management businesses determine purposes and essential means for tenant and property information they control in their workspaces (where the arrangement so provides).  
-- SIONA provides hosting, operational data-management, authorised access management, infrastructure security, privacy administration and compliance coordination, acting as **processor** under documented instructions.  
-- SIONA is an **independent controller** for its own corporate/admin/infrastructure processing where it determines purposes and means.  
-- The NestHub operating entity retains responsibility for its own independent NestHub processing. Its registered name is not invented here.  
-- Parties are not joint controllers unless a written agreement says so.
+When customers use NestHub to manage tenant and property information, they are responsible for determining the purposes for which that information is collected and used, subject to applicable law.
 
-## ODPC (SIONA) — verified
+NestHub works with technology service providers, including SIONA Technologies Limited, to deliver and maintain its services. These providers may process personal information as necessary to provide the platform and related services, in accordance with applicable agreements and instructions.
+
+We take appropriate measures to protect personal information and limit access to authorised parties.
+
+For questions concerning information held within a particular property workspace, tenants should first contact the relevant property manager. For general NestHub privacy enquiries, please contact hello@nesthub.app.
+
+Additional NestHub contact: +254 701 388 400. Deletion requests: `/data-deletion/`.
+
+## SIONA ODPC disclosure (verified)
 
 | Field | Value |
 |---|---|
@@ -23,9 +27,4 @@ NestHub is offered in partnership with SIONA Technologies Limited. NestHub remai
 | Capacities | Data Controller (serial 33476); Data Processor (serial 33477) |
 | Validity shown | 10 November 2026 – 10 November 2028 |
 
-## NestHub contacts
-
-- `hello@nesthub.app`  
-- `+254 701 388 400`
-
-No DPO name is published until a formal appointment is signed and authorised.
+Registration does not make SIONA the controller of all NestHub personal information.
