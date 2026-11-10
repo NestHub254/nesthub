@@ -1,18 +1,19 @@
 # NestHub data deletion
 
-**Status:** Published (SIONA compliance update)  
-**Public page:** `frontend/public/data-deletion/index.html` → `https://nesthub.sionaglobal.com/data-deletion/`  
+**Status:** Published — Option A  
+**Public page:** `frontend/public/data-deletion/index.html`  
 **Last updated:** 10 November 2026  
-**Type:** documentation / disclosure only — no automated deletion API claimed
+**Type:** disclosure only — no automated deletion API
 
-## Procedure summary
+## Workflow
 
-1. User submits a deletion request to `hello@nesthub.app` (or phone/WhatsApp +254 701 388 400 with written follow-up).  
-2. Identity is verified.  
-3. The responsible controller is identified.  
-4. SIONA coordinates according to its contractual / technology-partner role.  
-5. Retention and legal obligations are checked.  
-6. Deletion or anonymisation is completed where legally appropriate.  
-7. The requester receives confirmation.
+1. Request via `hello@nesthub.app` or +254 701 388 400 (with written follow-up).  
+2. Identity verification.  
+3. Identify relevant controller.  
+4. SIONA records and coordinates.  
+5. Controller instructions where SIONA is processor.  
+6. SIONA executes authorised actions on systems it operates.  
+7. Document deletion, anonymisation, or lawful retention.  
+8. Respond to requester.
 
-Account deletion is distinct from statutory record-retention requirements.
+Distinguish NestHub accounts, property-owner workspace records, tenant personal information, infrastructure logs, and statutory retention.
