@@ -1,36 +1,18 @@
 # NestHub data deletion
 
-**Status:** Published (partner-approved public copy)  
+**Status:** Published (SIONA compliance update)  
 **Public page:** `frontend/public/data-deletion/index.html` → `https://nesthub.sionaglobal.com/data-deletion/`  
-**Footer link:** NestHub marketing footer  
-**Type of work:** documentation / disclosure only (no deletion backend built; no account-deletion API claimed)
+**Last updated:** 10 November 2026  
+**Type:** documentation / disclosure only — no automated deletion API claimed
 
-## Request channel
+## Procedure summary
 
-Users email `hello@nesthub.app` with subject “NestHub data deletion request”, or start by phone/WhatsApp `+254 701 388 400` and follow up in writing.
+1. User submits a deletion request to `hello@nesthub.app` (or phone/WhatsApp +254 701 388 400 with written follow-up).  
+2. Identity is verified.  
+3. The responsible controller is identified.  
+4. SIONA coordinates according to its contractual / technology-partner role.  
+5. Retention and legal obligations are checked.  
+6. Deletion or anonymisation is completed where legally appropriate.  
+7. The requester receives confirmation.
 
-## Identity verification
-
-NestHub verifies requester identity (for example control of the registered email) before acting on NestHub account or property-associated records.
-
-## Responsibility split
-
-| Record type | Primary handler |
-|---|---|
-| NestHub accounts, property associations, NestHub-managed tenant/property operational data | NestHub / operating partner |
-| Hosting logs, deploy diagnostics, infrastructure support records controlled by SIONA | SIONA Technologies Limited, after NestHub confirms the request |
-| Third-party form processor copies (e.g. Formspree), if used | NestHub confirms processor and requests deletion there |
-
-## Legal retention
-
-If retention is required for a verified legal, dispute, security, or accounting reason, NestHub should tell the requester what was retained and why.
-
-## Confirmation
-
-NestHub sends email confirmation of outcome. Confirmation must not expose other people’s personal data.
-
-## Out of scope
-
-- Account-deletion API
-- Database wipe workflows
-- Partner CRM / offline record deletion outside NestHub systems
+Account deletion is distinct from statutory record-retention requirements.

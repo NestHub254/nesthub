@@ -494,10 +494,13 @@ section.lp-section-muted{ padding:5.5rem 4rem; }
 }
 .lp-footer-bottom-copy{ display:flex; flex-direction:column; gap:.35rem; max-width:36rem; }
 .lp-footer-partner{
-  color:var(--ink-faint); font-size:.78rem; letter-spacing:.01em; text-decoration:none;
+  color:var(--ink-faint); font-size:.78rem; letter-spacing:.01em;
   width:fit-content;
 }
-.lp-footer-partner:hover{ color:var(--primary); }
+.lp-footer-partner a{
+  color:inherit; text-decoration:underline; text-underline-offset:2px;
+}
+.lp-footer-partner a:hover{ color:var(--primary); }
 .lp-footer-legal{ display:flex; gap:1.4rem; flex-wrap:wrap; }
 .lp-footer-legal a:hover{ color:var(--primary); }
 

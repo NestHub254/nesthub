@@ -636,14 +636,17 @@ export default function Landing() {
         <div className="lp-footer-bottom">
           <div className="lp-footer-bottom-copy">
             <span>© {new Date().getFullYear()} NestHub · Rental living, simplified.</span>
-            <a
-              className="lp-footer-partner"
-              href="https://sionaglobal.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              In partnership with SIONA Technologies Limited.
-            </a>
+            <span className="lp-footer-partner">
+              Technology partnership: NestHub ×{' '}
+              <a
+                href="https://sionaglobal.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                SIONA Technologies Limited
+              </a>
+              .
+            </span>
           </div>
           <div className="lp-footer-legal">
             <a href="/privacy/">Privacy Policy</a>
