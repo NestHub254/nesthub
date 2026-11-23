@@ -42,7 +42,7 @@ export default function DashboardLayout() {
 
       <aside className={`db-sidebar ${mobileOpen ? 'db-sidebar-open' : ''}`} aria-label="Tenant navigation">
         <div className="db-brand">
-          <img src="/brand/tenant-mark.svg" alt="" width="36" height="36" style={{display:'block',flexShrink:0,borderRadius:9}}/>
+          <img src={`${import.meta.env.BASE_URL}brand/tenant-mark.svg`} alt="" width="36" height="36" style={{display:'block',flexShrink:0,borderRadius:9}}/>
           <span>NestHub</span>
         </div>
 

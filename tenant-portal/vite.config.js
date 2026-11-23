@@ -2,7 +2,10 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
+const base = process.env.VITE_FIREBASE_MOUNTED === 'true' ? '/tenant/' : '/';
+
 export default defineConfig({
+  base,
   plugins: [
     react(),
     VitePWA({
@@ -15,13 +18,13 @@ export default defineConfig({
         theme_color: '#A53F37',
         background_color: '#f7f7fc',
         display: 'standalone',
-        id: '/',
-        start_url: '/',
-        scope: '/',
+        id: base,
+        start_url: base,
+        scope: base,
         icons: [
-          { src: '/brand/tenant-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
-          { src: '/brand/tenant-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-          { src: '/brand/tenant-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+          { src: `${base}brand/tenant-192.png`, sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: `${base}brand/tenant-512.png`, sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: `${base}brand/tenant-maskable-512.png`, sizes: '512x512', type: 'image/png', purpose: 'maskable' }
         ]
       },
       workbox: {

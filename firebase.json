@@ -23,6 +23,18 @@
           "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
         },
         {
+          "source": "/tenant/sw.js",
+          "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+        },
+        {
+          "source": "/tenant",
+          "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+        },
+        {
+          "source": "/tenant/**",
+          "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+        },
+        {
           "source": "/robots.txt",
           "headers": [
             { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
@@ -58,6 +70,14 @@
         }
       ],
       "rewrites": [
+        {
+          "source": "/tenant",
+          "destination": "/tenant/index.html"
+        },
+        {
+          "source": "/tenant/**",
+          "destination": "/tenant/index.html"
+        },
         {
           "source": "**",
           "destination": "/index.html"

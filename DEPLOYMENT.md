@@ -2,16 +2,20 @@
 
 - Property/owner PWA: https://nesthub.sionaglobal.com
 - Property/owner Vercel alias: https://nesthub-six.vercel.app
-- Tenant PWA: https://nesthub-tenants.vercel.app
+- Tenant PWA: https://nesthub.sionaglobal.com/tenant/
 - Hosted API: https://wmwzrhreqmjsmksptzaj.supabase.co/functions/v1/nesthub-api
 - Database: NestHub Supabase project `wmwzrhreqmjsmksptzaj`.
 
-The two React/Vite applications are independent Vercel projects. Set `VITE_API_URL`
-on both, `VITE_TENANT_PORTAL_URL` on the property app, and `VITE_GOOGLE_CLIENT_ID`
-on both. These are public configuration, not secrets. Rebuild after changes.
+The owner and tenant React/Vite applications share Firebase Hosting in production:
+the owner portal is at `/`, and the tenant portal is mounted at `/tenant/`. The
+tenant app can also be built at `/` for its legacy Vercel project. Firebase
+production bundles use the hosted Supabase Edge API URL and set the owner app's
+tenant link to `https://nesthub.sionaglobal.com/tenant/login`. `VITE_API_URL`,
+`VITE_TENANT_PORTAL_URL`, and `VITE_GOOGLE_CLIENT_ID` are public configuration,
+not secrets. Rebuild after changes.
 The Supabase Edge Function CORS allowlist must include each deployed browser origin.
 The property app's production origin is `https://nesthub.sionaglobal.com`; the tenant
-app remains at `https://nesthub-tenants.vercel.app` until its own domain is configured.
+app is served from the same custom domain under `/tenant/`.
 Google sign-in is used only by the property portal; tenant accounts use email
 and password. The API rejects tenant Google requests and tenant identities,
 including requests that claim to come from the property portal. Only the property
@@ -97,6 +101,17 @@ not deployed. The live root, privacy notice, service terms and `/app/home` SPA
   `index-jMQvNDkI.css`. The responsive header and dashboard illustration include
   phone-width layout fixes; the CSS bundle contains the narrowed floating cards
   and corrected offsets. The tenant site was not changed.
+
+## Shared-domain tenant release — 2026-11-23
+
+The Firebase main Hosting site serves both SPAs. `node
+scripts/build-firebase-hosting.mjs` builds the owner app at `/`, builds the tenant
+app with `/tenant/` as its base path and the production Supabase API URL, then
+places it in `frontend/dist/tenant`. Firebase Hosting rewrites tenant routes to
+the tenant app entrypoint. The tenant PWA manifest and service worker are scoped
+to `/tenant/`. Tenant password-reset email links were updated in the Edge Function
+source to `/tenant/forgot-password`; deploy `nesthub-api` after signing in to the
+Supabase CLI for those email links to switch to the shared domain.
 
 ## Connected operations release — 2026-10-07
 Both production aliases deployed successfully. Supabase nesthub-api version 8 uses custom session authentication. Applied migration 20261006082039_connected_property_operations.sql. Frontend deployments include uncommitted workspace changes based on d758e75. See PROPERTY-WORKSPACE.md for supported workflows and provider limitations.

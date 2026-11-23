@@ -30,7 +30,7 @@ export default function Login() {
     <div className="tp-page">
       <div className="tp-card">
         <div className="tp-form-side">
-          <span className="tp-brand"><img src="/brand/tenant-mark.svg" alt="" width="36" height="36" style={{display:'block',flexShrink:0,borderRadius:9}}/>NestHub</span>
+          <span className="tp-brand"><img src={`${import.meta.env.BASE_URL}brand/tenant-mark.svg`} alt="" width="36" height="36" style={{display:'block',flexShrink:0,borderRadius:9}}/>NestHub</span>
           <a className="tp-link tp-back-home" href="https://nesthub.sionaglobal.com/">Back to the NestHub home page</a>
           <p className="tp-eyebrow">Tenant Portal</p>
           <h1>Welcome back.</h1>
