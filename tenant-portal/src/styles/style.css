@@ -64,6 +64,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-
 .tp-row { display: flex; justify-content: flex-end; margin-top: -6px; }
 .tp-link { color: var(--indigo); font-size: 13px; font-weight: 600; text-decoration: none; }
 .tp-link:hover { text-decoration: underline; }
+.tp-back-home { display: inline-block; width: fit-content; margin: -15px 0 24px; }
 
 .tp-btn {
   margin-top: 4px; padding: 12px; border-radius: 10px; border: none;
