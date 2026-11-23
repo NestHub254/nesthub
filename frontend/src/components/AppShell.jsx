@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { clearSession } from '../api/client.js';
+import { logout as endSession } from '../api/client.js';
 import {
   LayoutDashboard, Wallet, Wrench, MessageSquare, User, Users,
   ClipboardList, Megaphone, LogOut, Building2
@@ -39,15 +39,14 @@ const navByRole = {
 export default function AppShell({ session, title, children }) {
   const navigate = useNavigate();
 
-  function logout() {
-    clearSession();
-    navigate('/');
+  async function logout() {
+    try { await endSession(); } finally { navigate('/'); }
   }
 
   return (
     <>
       <header className="app-header">
-        <span className="brand"><span>n</span>NestHub</span>
+        <span className="brand"><img src="/brand/owner-mark.svg" alt="" width="36" height="36" style={{display:'block',flexShrink:0,borderRadius:9}}/>NestHub</span>
         <div className="app-actions">
           <span className="user-menu">
             <span>{session.fullName.split(' ').map(p => p[0]).slice(0, 2).join('')}</span>

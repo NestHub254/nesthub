@@ -9,12 +9,13 @@ export async function api(path, options = {}) {
   const session = getSession();
   const res = await fetch(`${API_BASE}${path}`, {
     ...options,
+    signal: options.signal || AbortSignal.timeout(30000),
     headers: {
       'Content-Type': 'application/json',
       ...(session?.token ? { Authorization: `Bearer ${session.token}` } : {}),
       ...(options.headers || {}),
     },
-  });
+  }).catch(error => { throw new Error(error.name==='TimeoutError'?'The connection is taking too long. Please try again.':'Unable to connect. Check your internet connection and try again.'); });
   let body = null;
   try { body = await res.json(); } catch { /* no body */ }
   if (!res.ok) {
@@ -23,7 +24,7 @@ export async function api(path, options = {}) {
   return body;
 }
 
-// NOTE: Storing the session token in localStorage means any script running on
+// NOTE: Storing the session token in sessionStorage means any script running on
 // this page (e.g. via an XSS bug) can read it. The real fix is an httpOnly
 // cookie issued by the backend — that can't be done from the frontend alone.
 // Until the backend supports that, keep this as the single choke point for
@@ -47,6 +48,11 @@ export function getSession() {
 
 export function clearSession() {
   sessionStorage.removeItem(SESSION_KEY);
+}
+
+export async function logout() {
+  try { await api('/api/auth/logout', { method: 'POST', body: '{}' }); }
+  finally { clearSession(); }
 }
 
 // Basic shared input guards used across the auth forms.

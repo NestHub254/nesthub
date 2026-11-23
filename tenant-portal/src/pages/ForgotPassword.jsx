@@ -1,107 +1,11 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Mail, Smartphone } from 'lucide-react';
-import { api, isValidKenyanPhone } from '../api/client.js';
-
-export default function ForgotPassword() {
-  const [method, setMethod] = useState('email'); // 'email' | 'mobile'
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  async function handleSubmit(event) {
-    event.preventDefault();
-    setError('');
-    const values = Object.fromEntries(new FormData(event.target));
-
-    if (method === 'mobile' && !isValidKenyanPhone(values.phone)) {
-      setError('Enter a valid Kenyan mobile number, e.g. 07XXXXXXXX.');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      if (method === 'email') {
-        // NOTE: /api/auth/forgot-password doesn't exist on the backend yet —
-        // add that endpoint (send reset email/token) before this will work end to end.
-        await api('/api/auth/forgot-password', { method: 'POST', body: JSON.stringify(values) });
-      } else {
-        // NOTE: /api/auth/forgot-password/sms doesn't exist yet either — this
-        // needs an SMS provider (e.g. Africa's Talking) wired up server-side
-        // to actually send a reset code.
-        await api('/api/auth/forgot-password/sms', { method: 'POST', body: JSON.stringify(values) });
-      }
-      setSent(true);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <div className="tp-page">
-      <div className="tp-card tp-card-narrow">
-        <div className="tp-form-side">
-          <span className="tp-brand"><span className="tp-mark">n</span>NestHub</span>
-          <p className="tp-eyebrow">Tenant Portal</p>
-          <h1>Reset your password.</h1>
-
-          {sent ? (
-            <p className="tp-sub">
-              {method === 'email'
-                ? "If that email has an account, we've sent a reset link to it."
-                : "If that number has an account, we've sent a reset code to it by SMS."}
-            </p>
-          ) : (
-            <>
-              <div className="tp-tabs" role="tablist" aria-label="Reset method">
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={method === 'email'}
-                  className={`tp-tab ${method === 'email' ? 'tp-tab-active' : ''}`}
-                  onClick={() => { setMethod('email'); setError(''); }}
-                >
-                  <Mail size={15} strokeWidth={1.75} /> Email
-                </button>
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={method === 'mobile'}
-                  className={`tp-tab ${method === 'mobile' ? 'tp-tab-active' : ''}`}
-                  onClick={() => { setMethod('mobile'); setError(''); }}
-                >
-                  <Smartphone size={15} strokeWidth={1.75} /> Mobile number
-                </button>
-              </div>
-
-              <p className="tp-sub">
-                {method === 'email'
-                  ? 'Enter the email your reception team used to set up your account.'
-                  : "Enter the mobile number your reception team used to set up your account. We'll text you a reset code."}
-              </p>
-
-              <form onSubmit={handleSubmit}>
-                {method === 'email' ? (
-                  <label>Email
-                    <input type="email" name="email" required autoFocus />
-                  </label>
-                ) : (
-                  <label>Mobile number
-                    <input type="tel" name="phone" placeholder="07XX XXX XXX" required autoFocus />
-                  </label>
-                )}
-                {error && <p className="tp-error">{error}</p>}
-                <button className="tp-btn" disabled={loading}>
-                  {loading ? 'Sending…' : method === 'email' ? 'Send reset link' : 'Send reset code'}
-                </button>
-              </form>
-            </>
-          )}
-          <p className="tp-fine"><Link className="tp-link" to="/login">← Back to log in</Link></p>
-        </div>
-      </div>
-    </div>
-  );
+import {useState,useEffect} from 'react';
+import {Link,useLocation} from 'react-router-dom';
+import {api} from '../api/client.js';
+export default function ForgotPassword(){
+ const location=useLocation();
+ const token=new URLSearchParams(location.hash.slice(1)).get('token')||'';
+ const [sent,setSent]=useState(false),[done,setDone]=useState(false),[busy,setBusy]=useState(false),[error,setError]=useState('');
+ useEffect(()=>{setError('');setDone(false);},[token]);
+ async function submit(e){e.preventDefault();setError('');const values=Object.fromEntries(new FormData(e.currentTarget));if(token&&values.password!==values.confirmPassword){setError('Passwords do not match.');return;}setBusy(true);try{await api(token?'/api/auth/reset-password':'/api/auth/forgot-password',{method:'POST',body:JSON.stringify(token?{...values,token}:values)});token?setDone(true):setSent(true);}catch(err){setError(err.message);}finally{setBusy(false);}}
+ return <div className="tp-page"><div className="tp-card tp-card-narrow"><div className="tp-form-side"><span className="tp-brand"><img src="/brand/tenant-mark.svg" alt="" width="36" height="36"/>NestHub</span><p className="tp-eyebrow">TENANT ACCOUNT RECOVERY</p><h1>{done?'You’re ready to sign in.':token?'Choose your new password.':'Forgot your password?'}</h1>{done?<p className="tp-sub" role="status">Your password was changed and previous sessions signed out. Use your new password to log in.</p>:sent?<div role="status"><p className="tp-sub">If this email belongs to a tenant account, you’ll receive a reset link and a six-digit code. Check your inbox and spam folder, then open the link.</p><p>The link expires in 15 minutes. If no email arrives, check the address with your property manager.</p><button className="tp-btn" onClick={()=>setSent(false)}>Try another email / request again</button></div>:<><p className="tp-sub">{token?'Enter the six-digit code from the same email, then enter your new password twice. Never share the link or code.':'Enter the email your property manager registered for your tenant account. We’ll send a reset link and one-time code to that address.'}</p><form onSubmit={submit}>{token?<><label>One-time code<input name="otp" inputMode="numeric" pattern="[0-9]{6}" maxLength={6} autoComplete="one-time-code" required/></label><label>New password<input name="password" type="password" minLength={8} autoComplete="new-password" required/></label><label>Confirm new password<input name="confirmPassword" type="password" minLength={8} autoComplete="new-password" required/></label><p className="tp-fine">At least 8 characters. You have five attempts to enter the correct code.</p></>:<label>Email<input name="email" type="email" autoComplete="email" required/></label>}{error&&<p className="tp-error" role="alert">{error}</p>}<button className="tp-btn" disabled={busy}>{busy?'Please wait…':token?'Reset my password':'Email me a reset link & code'}</button></form>{token&&<p><Link to="/forgot-password">Request a new link</Link></p>}</>}<p className="tp-fine"><Link className="tp-link" to="/login">Back to login</Link></p></div></div></div>;
 }

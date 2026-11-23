@@ -2,6 +2,7 @@ package com.nesthub.backend.controller;
 
 import com.nesthub.backend.dto.AuthResponse;
 import com.nesthub.backend.dto.LoginRequest;
+import com.nesthub.backend.dto.GoogleLoginRequest;
 import com.nesthub.backend.dto.RegisterRequest;
 import com.nesthub.backend.service.AuthService;
 import jakarta.validation.Valid;
@@ -25,5 +26,10 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponse login(@Valid @RequestBody LoginRequest request) {
         return authService.login(request);
+    }
+
+    @PostMapping("/google")
+    public AuthResponse google(@Valid @RequestBody GoogleLoginRequest request) {
+        return authService.googleLogin(request);
     }
 }

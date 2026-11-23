@@ -27,6 +27,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(name = "google_subject", unique = true)
+    private String googleSubject;
+
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 

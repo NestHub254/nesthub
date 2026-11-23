@@ -55,9 +55,6 @@ public class UserController {
 
         UUID targetPropertyId;
         if (caller.getRole() == Role.owner) {
-            if (requestedRole == Role.tenant) {
-                throw new IllegalArgumentException("Owners create managers or maintenance staff. Reception creates tenants.");
-            }
             if (request.propertyId() == null) {
                 throw new IllegalArgumentException("propertyId is required.");
             }
@@ -104,6 +101,13 @@ public class UserController {
                 .orElseThrow(() -> new IllegalArgumentException("Caller not found."));
         UUID scope = caller.getRole() == Role.manager ? caller.getPropertyId() : propertyId;
         if (scope == null) return List.of();
+        if (caller.getRole() == Role.owner) {
+            Property property = propertyRepository.findById(scope)
+                    .orElseThrow(() -> new IllegalArgumentException("Property not found."));
+            if (!property.getOwnerId().equals(callerId)) {
+                throw new IllegalArgumentException("You don't own that property.");
+            }
+        }
         return userRepository.findByPropertyId(scope).stream().map(this::toResponse).toList();
     }
 

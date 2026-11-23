@@ -1,65 +1,60 @@
-# NestHub — fresh start
+# NestHub
 
-Two independent projects, talking over plain HTTP + JWT. No shared Node
-server, no localStorage-as-a-database, no `.bat` launcher.
+NestHub connects rental properties, residents, bills, repairs and building communication through a property workspace and a separate tenant portal.
 
-```
-nesthub/
-├── backend/    Spring Boot API (Java 17, Maven)
-└── frontend/   React + Vite PWA
-```
+## Production
 
-## What's working right now
+- Property workspace: [nesthub.sionaglobal.com](https://nesthub.sionaglobal.com)
+- Tenant portal: [nesthub-tenants.vercel.app](https://nesthub-tenants.vercel.app)
+- API and database: Supabase Edge Function and Postgres
 
-- Real user accounts in Postgres (bcrypt-hashed passwords, not plaintext).
-- `POST /api/auth/register` and `POST /api/auth/login` return a real JWT.
-- The JWT is required on every other endpoint (`SecurityConfig` enforces this).
-- Frontend has working Landing / Login / Register screens wired to the real
-  backend, plus one placeholder dashboard per role (tenant/owner/manager/maintenance).
-- The React build is a PWA out of the box (`vite-plugin-pwa`) — installable
-  on a phone home screen with no extra work.
+See [DEPLOYMENT.md](DEPLOYMENT.md) for hosting and authentication details, and [IMPLEMENTATION-STATUS.md](IMPLEMENTATION-STATUS.md) for what is complete and what remains.
 
-## What's intentionally NOT built yet (next phases)
+## Current connected workflows
 
-- Properties / units / leases / tickets / payments endpoints — the DB tables
-  exist (`V1__init.sql`), but there are no controllers for them yet. That's
-  Phase 2–4 from the original roadmap.
-- Role-based route protection beyond "any valid token" (e.g. only `manager`
-  hitting manager endpoints) — add `@PreAuthorize` once real endpoints exist.
-- M-Pesa/Stripe payments.
+- Owners create properties, units, tenant accounts and staff accounts. Tenant move-in connects the resident, unit, rent, deposit and tenancy dates.
+- Owners, property managers and maintenance staff receive role-scoped workspaces. Tenant and staff records are checked by the hosted API; clients do not connect directly to protected database tables.
+- Rent generation runs idempotently on a daily schedule at 00:05 Africa/Nairobi. Rent is charged for the full month; proration is not implemented.
+- Tenants submit M-Pesa or bank references for management review. Confirmed payments update balances and produce downloadable receipts. NestHub does not collect money or automatically reconcile bank/M-Pesa transactions.
+- Repairs support assignment, progress, private photos and tenant review. Deposit settlements support owner proposals and tenant responses; refunds remain external.
+- Property communications support in-app channels and configured email delivery. SMS requires provider setup.
 
-## Running it locally
+## Not live yet
 
-**Backend**
-```
-cd backend
-# needs a Postgres instance - point DB_URL/DB_USER/DB_PASSWORD at it
-mvn spring-boot:run
+Automatic M-Pesa/STK or card collection, bank reconciliation, SMS delivery, paid subscription billing and plan enforcement are not active. Other remaining work includes a complete immutable accounting ledger, broader role invitations/offboarding and recovery, lease/signature document handling, and fuller operational audit and release controls. See the implementation tracker for the full backlog.
+
+## Project layout
+
+```text
+frontend/       Property and owner PWA (React + Vite)
+tenant-portal/  Separate tenant PWA (React + Vite)
+supabase/       Production Edge Function and database migrations
+backend/        Spring Boot API for local or alternative hosting; not the production API
+scripts/        Workspace synchronization and manual hosted workflow verification
 ```
 
-**Frontend**
-```
+## Local development
+
+Run each frontend in its own terminal:
+
+```bash
 cd frontend
 npm install
 npm run dev
 ```
-Create `frontend/.env` with `VITE_API_URL=http://localhost:8080`.
 
-## Free hosting plan (no card required)
+```bash
+cd tenant-portal
+npm install
+npm run dev
+```
 
-| Piece | Where | Free tier notes |
-|---|---|---|
-| Postgres | Supabase (used as a plain DB, not its Auth) | 500MB, generous for this |
-| Backend | Render free Web Service | Sleeps after ~15 min idle; cold start on next request |
-| Frontend | Vercel | Static build, no sleep, unlimited deploys |
+Set `VITE_API_URL` to the API URL and `VITE_TENANT_PORTAL_URL` in the property app environment. Use the Supabase Edge Function for production. The Spring Boot service is available for local or alternative hosting with its own configured database and credentials.
 
-Environment variables to set wherever the backend runs: `DB_URL`, `DB_USER`,
-`DB_PASSWORD`, `JWT_SECRET` (generate a real random 32+ byte value — never
-reuse the dev default in `application.yml`), `ALLOWED_ORIGINS` (your deployed
-frontend URL).
+## Key project notes
 
-## Next step
-
-Build the `properties` / `units` / `leases` endpoints in the backend, then
-wire `TenantHome.jsx` to show real rent status — that's Phase 2 from the
-original blueprint.
+- [Property workspace guide](PROPERTY-WORKSPACE.md)
+- [Tenant and property workflow status](IMPLEMENTATION-STATUS.md)
+- [Deployment and auth](DEPLOYMENT.md)
+- [Email and subscriptions](EMAIL-AND-SUBSCRIPTIONS.md)
+- [Property and payment workflows](COMMUNITY-AND-PAYMENTS.md)

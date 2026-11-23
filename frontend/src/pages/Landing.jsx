@@ -5,7 +5,7 @@ import {
   CheckCircle2, User, Users2, Building, HardHat, Home as HomeIcon, Briefcase,
   Phone, Mail, MessageCircle, Send, MapPin, Eye, BellRing, Camera,
   ClipboardList, Radio, Zap, FileText, LayoutDashboard, BarChart3,
-  KeyRound, CheckCheck, Loader2, ArrowRight,
+  KeyRound, CheckCheck, Loader2, ArrowRight, Menu, X,
 } from 'lucide-react';
 import '../styles/landing.css';
 
@@ -13,6 +13,7 @@ const WHATSAPP_NUMBER = '254701388400';
 const PHONE_DISPLAY = '0701 388 400';
 const FORM_ENDPOINT = 'https://formspree.io/f/xwpnwkoe';
 const USD_RATE = 129; // KES per USD, used for the display toggle only
+const TENANT_PORTAL_URL = import.meta.env.VITE_TENANT_PORTAL_URL || 'http://localhost:5174';
 
 const CORE_MODULES = [
   { icon: Building2, label: 'Property Management' },
@@ -25,31 +26,31 @@ const CORE_MODULES = [
 
 const TRUST_BADGES = [
   { icon: Smartphone, label: 'Installs like an app' },
-  { icon: Zap, label: 'Real-time updates' },
-  { icon: CreditCard, label: 'M-Pesa ready' },
+  { icon: Zap, label: 'Updates every 30 seconds' },
+  { icon: CreditCard, label: 'M-Pesa reference tracking' },
   { icon: ShieldCheck, label: 'Role-based security' },
 ];
 
 const STATS = [
-  { value: '250+', label: 'Properties', body: 'Apartment blocks, hostels, bedsitters and mixed developments, all in one place.' },
-  { value: '15K+', label: 'Tenants', body: 'Every tenant, lease, payment and maintenance request on one dashboard.' },
-  { value: '99.9%', label: 'Platform uptime', body: 'Cloud powered, real-time, and available whenever you need it.' },
-  { value: '24/7', label: 'Support', body: 'Owners, staff and tenants stay connected around the clock.' },
+ {value:'Owners',label:'Property workspace',body:'Units, residents, money and repairs in one place.'},
+ {value:'Tenants',label:'A separate portal',body:'Balances, payment references, messages and repair requests.'},
+ {value:'Staff',label:'Assigned work',body:'Managers and maintenance staff have different access.'},
+ {value:'Mobile',label:'Installable PWA',body:'Use NestHub on a phone or laptop.'},
 ];
 
 const CHAIN = [
   { label: 'Owner', body: 'Registers the workspace and adds properties.' },
   { label: 'Reception & maintenance', body: 'The owner creates their logins, scoped to a property.' },
-  { label: 'Tenants', body: 'Reception creates tenant logins for each unit.' },
-  { label: 'One shared dashboard', body: 'Everyone sees only what their role is scoped to, updated in real time.' },
+  { label: 'Tenants', body: 'The owner creates a tenant account and assigns a vacant unit.' },
+  { label: 'One shared dashboard', body: 'Each role sees its permitted records; open dashboards refresh every 30 seconds.' },
 ];
 
 const FEATURES = [
   { icon: Building2, title: 'Properties & units', body: 'Add every building you manage, track units, and keep addresses and ownership in one place.' },
-  { icon: Users2, title: 'Tenants', body: 'Keep verified tenant records, contacts, lease history, and documents in sync.' },
-  { icon: Wrench, title: 'Maintenance tickets', body: 'Tenants report issues, maintenance claims and closes them — no lost paper slips.' },
-  { icon: CreditCard, title: 'Rent & payments', body: 'M-Pesa STK push and card payments, with receipts sent automatically the moment they land.' },
-  { icon: MessagesSquare, title: 'Announcements & staff chat', body: 'Reception posts building-wide notices; staff coordinate without leaving the app.' },
+  { icon: Users2, title: 'Tenants', body: 'Keep tenant accounts, contact details, assigned homes and tenancy history together.' },
+  { icon: Wrench, title: 'Maintenance tickets', body: 'Tenants report issues; management assigns staff, who update progress and completion.' },
+  { icon: CreditCard, title: 'Rent & payments', body: 'Record M-Pesa, bank or cash payments. Management verifies references before balances and downloadable receipts update.' },
+  { icon: MessagesSquare, title: 'Communications & community', body: 'Management emails registered tenants; residents connect through a private property community with photos and bios. SMS is ready for provider setup.' },
   { icon: ShieldCheck, title: 'Role-scoped access', body: 'Owners, reception, maintenance, and tenants each see only what their role needs.' },
 ];
 
@@ -68,23 +69,23 @@ const ROLE_TABS = [
     tagline: 'Everything a tenant needs, from their phone.',
     features: [
       { icon: LayoutDashboard, title: 'Dashboard', body: 'Rent status, last payment date, next due date, and any open tickets at a glance.' },
-      { icon: CreditCard, title: 'Pay rent', body: 'M-Pesa STK push or card payment, with an automatic receipt by email and in-app.' },
-      { icon: Wrench, title: 'Maintenance tickets', body: 'Raise a ticket with a category, description, and photo, then track it live.' },
-      { icon: MessagesSquare, title: 'Community board', body: 'Announcements from management and building notices in one feed.' },
-      { icon: User, title: 'My profile', body: 'Unit number, lease dates, emergency contacts, and document uploads.' },
-      { icon: BellRing, title: 'Notifications', body: 'Push alerts for payment confirmations, ticket updates, and announcements.' },
+      { icon: CreditCard, title: 'Pay rent', body: 'Pay externally by M-Pesa or bank transfer, submit a reference, and download a receipt after management confirms it.' },
+      { icon: Wrench, title: 'Maintenance tickets', body: 'Describe a repair, set its urgency, and follow management and staff updates.' },
+      { icon: MessagesSquare, title: 'Tenant community', body: 'Chat with neighbours in your property, add a profile photo and share a short bio.' },
+      { icon: User, title: 'My home', body: 'See your assigned unit, monthly rent and tenancy dates.' },
+      { icon: BellRing, title: 'Notifications', body: 'Read payment and repair updates in NestHub; management notices can also arrive by email.' },
     ],
   },
   {
     key: 'owner', label: 'Owner', icon: Briefcase,
     tagline: 'One dashboard for every property you own.',
     features: [
-      { icon: Building, title: 'Multi-property view', body: 'A card-based overview of every property — occupancy, revenue, and open issues.' },
+      { icon: Building, title: 'Multi-property view', body: 'Switch between your properties to view occupancy, income and open repairs.' },
       { icon: BarChart3, title: 'Financials', body: 'Revenue by month or property, expected vs collected rent, and outstanding arrears.' },
       { icon: Users2, title: 'Tenant management', body: 'A full directory with lease info, payment history, and contact details.' },
-      { icon: ShieldCheck, title: 'Staff management', body: 'Add or remove reception and maintenance logins, and set what each can see.' },
-      { icon: FileText, title: 'Reports', body: 'One-click PDF reports for financials, occupancy, and maintenance history.' },
-      { icon: KeyRound, title: 'Settings', body: 'Property details, rent amounts, due dates, and announcement permissions.' },
+      { icon: ShieldCheck, title: 'Staff management', body: 'Create property manager and maintenance logins with predefined access permissions.' },
+      { icon: FileText, title: 'Reports', body: 'View monthly cash and billed results, occupancy and unpaid bills; print or save the report as PDF.' },
+      { icon: KeyRound, title: 'Settings', body: 'Set tenancy rent and due dates during move-in, and share payment instructions with residents.' },
     ],
   },
   {
@@ -92,58 +93,46 @@ const ROLE_TABS = [
     tagline: 'The front desk, minus the paperwork.',
     features: [
       { icon: Users2, title: 'Tenant directory', body: 'Every tenant per property, with unit, payment status, and lease end date.' },
-      { icon: ClipboardList, title: 'Ticket queue', body: 'See every open ticket, assign it directly, or leave it open for maintenance to claim.' },
-      { icon: CreditCard, title: 'Rent tracking', body: "See who's paid and who's in arrears, and send reminders automatically." },
-      { icon: MessagesSquare, title: 'Announcements', body: 'Push a notice to the whole building or a single unit.' },
-      { icon: Radio, title: 'Staff chat', body: 'Coordinate with maintenance and the owner in one internal channel.' },
+      { icon: ClipboardList, title: 'Ticket queue', body: 'See open repairs, assign a staff member and follow progress.' },
+      { icon: CreditCard, title: 'Rent tracking', body: "See who has paid, check unpaid bills, and prepare an email or SMS payment reminder." },
+      { icon: MessagesSquare, title: 'Email & SMS notices', body: 'Choose one tenant or everyone, review registered contacts and send email. SMS needs a connected provider.' },
+      { icon: Radio, title: 'Building communication', body: 'Use private team chat and repair updates to coordinate the building team.' },
     ],
   },
   {
     key: 'maintenance', label: 'Maintenance', icon: HardHat,
     tagline: 'Pick up jobs and close them from a phone.',
     features: [
-      { icon: ClipboardList, title: 'My tickets', body: 'See every open ticket in your category, ready to claim.' },
-      { icon: Wrench, title: 'Claim & work', body: "Claim a ticket to own it, so two people don't turn up for the same job." },
-      { icon: CheckCheck, title: 'Status updates', body: 'Move a job from in progress to awaiting parts to done — the tenant is notified at each step.' },
-      { icon: Camera, title: 'Before & after photos', body: 'Document the fix directly on the ticket.' },
-      { icon: Radio, title: 'Staff chat', body: 'Coordinate fixes and confirm resolutions with the team in real time.' },
+      { icon: ClipboardList, title: 'My tickets', body: 'See repair jobs assigned to your account.' },
+      { icon: Wrench, title: 'Assigned jobs', body: "Management assigns the job to one responsible staff member." },
+      { icon: CheckCheck, title: 'Status updates', body: 'Update progress and mark completion with a note that the tenant can read.' },
+      { icon: Camera, title: 'Repair photos & notes', body: 'Attach private photos of the problem or completed work, alongside progress notes.' },
+      { icon: Radio, title: 'Team communication', body: 'Coordinate privately with management in team chat and keep residents informed through repair updates.' },
     ],
   },
 ];
 
 const LIFECYCLE = [
-  { icon: FileText, label: 'Raised', body: 'Category, description, and a photo — logged in seconds.' },
-  { icon: Eye, label: 'Seen', body: 'Lands in the reception queue and posts to staff chat instantly.' },
-  { icon: Wrench, label: 'Claimed', body: 'Maintenance claims it — one owner, no duplicated jobs.' },
-  { icon: ClipboardList, label: 'In progress', body: 'Status moves from in progress to awaiting parts.' },
+  { icon: FileText, label: 'Raised', body: 'Title, description and urgency — logged in seconds.' },
+  { icon: Eye, label: 'Seen', body: 'Appears on the property repair board.' },
+  { icon: Wrench, label: 'Assigned', body: 'Management assigns a responsible staff member.' },
+  { icon: ClipboardList, label: 'In progress', body: 'Staff update progress and explain the next step.' },
   { icon: CheckCheck, label: 'Closed', body: 'Maintenance marks it resolved and logs what was done.' },
-  { icon: BellRing, label: 'Notified', body: 'The tenant gets an automatic update the moment it is finished.' },
+  { icon: BellRing, label: 'Notified', body: 'The update appears in the tenant’s repairs and messages.' },
 ];
 
 const PRICING_PLANS = [
-  {
-    key: 'basic', name: 'Basic', kes: 1500,
-    tagline: 'For a single property just getting off spreadsheets.',
-    features: ['1 property, up to 10 units', 'Maintenance ticketing', 'Tenant messaging & announcements', 'Rent status tracking', 'Email support'],
-  },
-  {
-    key: 'standard', name: 'Standard', kes: 2500, popular: true,
-    tagline: 'For owners running several properties.',
-    features: ['Up to 5 properties, unlimited units', 'M-Pesa rent collection & receipts', 'Reception & maintenance logins', 'Real-time staff chat', 'Monthly PDF reports', 'Priority support'],
-  },
-  {
-    key: 'enterprise', name: 'Enterprise', kes: 5000,
-    tagline: 'For portfolios and property management companies.',
-    features: ['Unlimited properties & units', 'Multi-property analytics dashboard', 'Custom roles & permissions', 'Dedicated onboarding & data migration', 'API & integration support', 'Dedicated account manager'],
-  },
+ {key:'basic',name:'Basic',kes:1500,tagline:'Proposed: one small property.',features:['1 property, up to 10 units','Tenant accounts & manual payments','Repairs & in-app messages','Email password recovery on every plan']},
+ {key:'standard',name:'Standard',kes:2500,popular:true,tagline:'Proposed: growing property teams.',features:['Up to 5 properties, unlimited units','Manager & maintenance accounts','Expenses & monthly reports','Provider integrations when connected']},
+ {key:'enterprise',name:'Enterprise',kes:5000,tagline:'Proposed: larger portfolios.',features:['Unlimited properties & units','Portfolio reports & CSV exports','Custom roles & integrations (planned)','Onboarding scope agreed separately']},
 ];
 
 const FAQS = [
   { q: 'Who can create an account here?', a: 'Only property owners self-register. Every other login — reception, maintenance, tenants — is created by someone already inside the workspace.' },
-  { q: 'How do tenants get access?', a: 'Reception creates a tenant login from their dashboard once a lease starts. Tenants use a separate tenant app to sign in.' },
-  { q: 'Is my data isolated from other owners?', a: 'Yes. Every property, user, and ticket is scoped to the owner and property it belongs to at the database level.' },
-  { q: 'Is rent collected through M-Pesa?', a: 'Yes — tenants pay by M-Pesa STK push or card, and a receipt is issued automatically the moment payment lands.' },
-  { q: 'Can I switch between KES and USD?', a: 'Yes, use the currency toggle on the pricing section. Billing runs in Kenyan shillings; USD is shown for reference.' },
+  { q: 'How do tenants get access?', a: 'The owner moves a tenant into a vacant unit and creates their login. Tenants use the separate tenant portal.' },
+  { q: 'Is my data isolated from other owners?', a: 'Yes. Every property, user, and ticket is checked against your owner or property permissions by the server.' },
+  { q: 'Is rent collected through M-Pesa?', a: 'Tenants pay externally by M-Pesa or bank transfer and submit a reference. Management verifies it before confirming. STK push, card collection and automatic reconciliation are not connected yet.' },
+  { q: 'Can I switch between KES and USD?', a: 'Yes. USD is an approximate display conversion. Prices are proposed in KES; paid subscriptions and checkout are not active yet.' },
   { q: 'What happens after I request a demo?', a: "We'll get back to you within one business day by email or phone to schedule a walkthrough suited to your portfolio." },
 ];
 
@@ -178,6 +167,7 @@ export default function Landing() {
   const [activeRole, setActiveRole] = useState(ROLE_TABS[0].key);
   const [currency, setCurrency] = useState('KES');
   const [demoStatus, setDemoStatus] = useState('idle'); // idle | sending | sent | error
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const activeTab = ROLE_TABS.find((r) => r.key === activeRole);
   const pageRef = useReveal();
 
@@ -205,19 +195,23 @@ export default function Landing() {
 
   return (
     <div className="lp-page" ref={pageRef}>
-      <header className="lp-nav">
-        <span className="lp-brand"><span className="lp-mark">n</span>NestHub</span>
-        <nav className="lp-nav-links">
-          <a href="#how-it-works">How it works</a>
-          <a href="#features">Features</a>
-          <a href="#who">Who it's for</a>
-          <a href="#pricing">Pricing</a>
-          <a href="#faqs">FAQs</a>
-          <a href="#contact">Contact</a>
+      <header className={`lp-nav${mobileNavOpen ? ' lp-nav-open' : ''}`}>
+        <span className="lp-brand"><img src="/brand/owner-mark.svg" alt="" width="36" height="36" style={{display:'block',flexShrink:0,borderRadius:9}}/>NestHub</span>
+        <button className="lp-mobile-menu" type="button" aria-label={mobileNavOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={mobileNavOpen} onClick={() => setMobileNavOpen((open) => !open)}>
+          {mobileNavOpen ? <X size={21} /> : <Menu size={21} />}
+        </button>
+        <nav className="lp-nav-links" id="landing-navigation">
+          <a href="#how-it-works" onClick={() => setMobileNavOpen(false)}>How it works</a>
+          <a href="#features" onClick={() => setMobileNavOpen(false)}>Features</a>
+          <a href="#who" onClick={() => setMobileNavOpen(false)}>Who it's for</a>
+          <a href="#pricing" onClick={() => setMobileNavOpen(false)}>Pricing</a>
+          <a href="#faqs" onClick={() => setMobileNavOpen(false)}>FAQs</a>
+          <a href="#contact" onClick={() => setMobileNavOpen(false)}>Contact</a>
         </nav>
         <div className="lp-nav-actions">
-          <Link className="lp-btn lp-btn-ghost" to="/login">Log in</Link>
-          <Link className="lp-btn lp-btn-solid" to="/register">Create account</Link>
+          <a className="lp-btn lp-btn-ghost lp-tenant-link" href={TENANT_PORTAL_URL}>Tenant portal</a>
+          <Link className="lp-btn lp-btn-ghost" to="/login" onClick={() => setMobileNavOpen(false)}>Log in</Link>
+          <Link className="lp-btn lp-btn-solid" to="/register" onClick={() => setMobileNavOpen(false)}>Create account</Link>
         </div>
       </header>
 
@@ -326,15 +320,15 @@ export default function Landing() {
               </div>
               <div className="lp-check">
                 <CheckCircle2 size={20} />
-                <div><h5>Automatic rent collection</h5><p>M-Pesa payments, receipts, reminders, and reports.</p></div>
+                <div><h5>Rent tracking & confirmation</h5><p>Payment checkout, approved receipts, email reminders and reports.</p></div>
               </div>
               <div className="lp-check">
                 <CheckCircle2 size={20} />
-                <div><h5>Maintenance tracking</h5><p>Raise, assign, monitor, and close tickets in real time.</p></div>
+                <div><h5>Maintenance tracking</h5><p>Raise, assign, monitor and close repair requests.</p></div>
               </div>
               <div className="lp-check">
                 <CheckCircle2 size={20} />
-                <div><h5>Real-time communication</h5><p>Owners, reception, maintenance and tenants stay connected.</p></div>
+                <div><h5>Building conversations</h5><p>Owners, reception, maintenance and tenants stay connected.</p></div>
               </div>
             </div>
           </div>
@@ -347,6 +341,7 @@ export default function Landing() {
               height="800"
               loading="lazy"
             />
+            <span className="lp-dashboard-note">Illustrative dashboard · sample figures</span>
             <div className="lp-dashboard-card large card-revenue">
               <h5>Monthly revenue</h5>
               <h2>KES 4.8M</h2>
@@ -446,8 +441,8 @@ export default function Landing() {
         {/* ============ PRICING ============ */}
         <section id="pricing" className="lp-section text-center">
           <div className="lp-eyebrow lp-eyebrow-center">Pricing</div>
-          <h2 className="lp-section-title">Simple pricing that scales with your portfolio.</h2>
-          <p className="lp-lead">No hidden fees. Cancel anytime.</p>
+          <h2 className="lp-section-title">Proposed plans for a growing portfolio.</h2>
+          <p className="lp-lead">MVP access is currently unmetered. These are proposed packages; checkout, billing and plan limits are not active yet.</p>
           <div className="lp-pricing-toggle">
             <button
               type="button"
@@ -463,7 +458,7 @@ export default function Landing() {
           <div className="lp-pricing-grid">
             {PRICING_PLANS.map((plan) => (
               <div className={`lp-price-card${plan.popular ? ' popular' : ''}`} key={plan.key}>
-                {plan.popular && <span className="lp-price-badge">Most popular</span>}
+                {plan.popular && <span className="lp-price-badge">Proposed Standard</span>}
                 <h3>{plan.name}</h3>
                 <p className="lp-price-tagline">{plan.tagline}</p>
                 <div className="lp-price-amount">
@@ -479,7 +474,7 @@ export default function Landing() {
                   className={`lp-btn ${plan.popular ? 'lp-btn-solid' : 'lp-btn-ghost'} lp-btn-lg`}
                   to="/register"
                 >
-                  Choose {plan.name}
+                  Explore {plan.name}
                 </Link>
               </div>
             ))}
@@ -532,6 +527,7 @@ export default function Landing() {
                 {demoStatus === 'sending' ? <Loader2 size={16} className="lp-spin" /> : <Send size={16} />}
                 {demoStatus === 'sending' ? 'Sending…' : 'Request a demo'}
               </button>
+              <p className="lp-form-status">Your details are sent to Formspree to handle this demo request. See our <a href="/privacy.html">Privacy notice</a>.</p>
               {demoStatus === 'sent' && <p className="lp-form-status lp-form-status-ok"><CheckCircle2 size={15} /> Thanks — we'll be in touch within one business day.</p>}
               {demoStatus === 'error' && <p className="lp-form-status lp-form-status-error">Something went wrong. Please call or WhatsApp us instead.</p>}
             </form>
@@ -568,9 +564,9 @@ export default function Landing() {
               <span className="lp-contact-icon"><MessageCircle size={18} /></span>
               <div><strong>WhatsApp</strong><p>{PHONE_DISPLAY}</p></div>
             </a>
-            <a className="lp-contact-card" href="mailto:hello@nesthub.app">
+            <a className="lp-contact-card" href="#contact">
               <span className="lp-contact-icon"><Mail size={18} /></span>
-              <div><strong>Email</strong><p>hello@nesthub.app</p></div>
+              <div><strong>Request an email reply</strong><p>Use the contact form below.</p></div>
             </a>
             <span className="lp-contact-card lp-contact-card-static">
               <span className="lp-contact-icon"><MapPin size={18} /></span>
@@ -599,12 +595,12 @@ export default function Landing() {
       <footer className="lp-footer">
         <div className="lp-footer-grid">
           <div className="lp-footer-col lp-footer-brand">
-            <span className="lp-brand"><span className="lp-mark">n</span>NestHub</span>
+            <span className="lp-brand"><img src="/brand/owner-mark.svg" alt="" width="36" height="36" style={{display:'block',flexShrink:0,borderRadius:9}}/>NestHub</span>
             <p>Rental management workspace for owners, reception, maintenance, and tenants — everything scoped to who should see it.</p>
             <div className="lp-footer-contact">
               <a className="lp-btn lp-btn-ghost lp-btn-sm" href="tel:+254701388400"><Phone size={14} /> Call</a>
               <a className="lp-btn lp-btn-ghost lp-btn-sm" href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noreferrer"><MessageCircle size={14} /> WhatsApp</a>
-              <a className="lp-btn lp-btn-ghost lp-btn-sm" href="mailto:hello@nesthub.app"><Mail size={14} /> Email</a>
+              <a className="lp-btn lp-btn-ghost lp-btn-sm" href="#contact"><Mail size={14} /> Email</a>
             </div>
           </div>
 

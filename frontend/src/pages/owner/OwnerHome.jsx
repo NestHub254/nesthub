@@ -1,135 +1,92 @@
-import { useEffect, useState } from 'react';
-import AppShell from '../../components/AppShell.jsx';
-import { api } from '../../api/client.js';
-import { Plus, Building2, UserPlus } from 'lucide-react';
-
-export default function OwnerHome({ session }) {
-  const [properties, setProperties] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showPropertyModal, setShowPropertyModal] = useState(false);
-  const [showStaffModal, setShowStaffModal] = useState(false);
-  const [staffPropertyId, setStaffPropertyId] = useState(null);
-  const [error, setError] = useState('');
-  const [toast, setToast] = useState('');
-
-  async function loadProperties() {
-    setLoading(true);
-    try {
-      setProperties(await api('/api/properties/mine'));
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+import { useEffect, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { ArrowUpRight, ArrowRight, Plus, Search, ChevronDown, X, Menu, Building2, Users, DoorOpen, Wrench, Download, LogOut, Check, CalendarDays, Archive, LoaderCircle } from 'lucide-react';
+import { api, logout } from '../../api/client.js';
+import { modules, findPage } from './modules.js';
+import PageLayouts from './PageLayouts.jsx';
+import ReportLayouts from './ReportLayouts.jsx';
+import AccountDialog, { unitTypes } from './AccountDialog.jsx';
+import ThemeSelector, { useWorkspaceTheme } from './ThemeSelector.jsx';
+import AssignmentDialog from './AssignmentDialog.jsx';
+import { designs } from './pageDesigns.js';
+import '../../styles/owner.css';
+import '../../styles/page-layouts.css';
+import '../../styles/workspace-theme.css';
+const money = n => new Intl.NumberFormat('en-KE',{style:'currency',currency:'KES',maximumFractionDigits:0}).format(n||0);
+const date = v => v ? new Date(v).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '—';
+function exportCSV(rows,name) {
+  if(!rows.length)return;
+  const keys=[...new Set(rows.flatMap(Object.keys))];
+  const cell=v=>'"'+String(v??'').replace(/^[=+@-]/,"'$&").replaceAll('"','""')+'"';
+  const url=URL.createObjectURL(new Blob(['\uFEFF'+[keys,...rows.map(r=>keys.map(k=>r[k]))].map(r=>r.map(cell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}));
+  const a=document.createElement('a');a.href=url;a.download=name+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+export default function OwnerHome({session}) {
+  const workspaceTheme=useWorkspaceTheme(session.userId);
+  const location=useLocation(), navigate=useNavigate(); const parts=location.pathname.split('/');
+  const {module,page}=findPage(parts[2],parts[3]); const category=`${module.id}/${page.id}`;
+  const [assignments,setAssignments]=useState([]),[assignmentTarget,setAssignmentTarget]=useState(null);
+  const [expanded,setExpanded]=useState(module.id),[mobile,setMobile]=useState(false);
+  const [properties,setProperties]=useState([]),[records,setRecords]=useState([]),[accounts,setAccounts]=useState([]);
+  const [property,setProperty]=useState(''),[query,setQuery]=useState(''),[search,setSearch]=useState(''),[status,setStatus]=useState(''),[archived,setArchived]=useState(false);
+  const [loading,setLoading]=useState(true),[error,setError]=useState(''),[toast,setToast]=useState(''),[modal,setModal]=useState(null),[saving,setSaving]=useState(false),[formError,setFormError]=useState('');
+  const dialog=useRef(null);
+  async function load(){
+    setLoading(true);setError('');
+    try{
+      const [ps,rs,tenancies]=await Promise.all([api('/api/properties/mine'),api('/api/workspace'),api('/api/assignments')]);
+      const us=await Promise.all(ps.map(p=>api(`/api/users?propertyId=${p.id}`)));
+      setProperties(ps);setRecords(rs);setAccounts(us.flat());setAssignments(tenancies);
+    }catch(e){setError(e.message);}finally{setLoading(false);}
   }
-
-  useEffect(() => { loadProperties(); }, []);
-
-  useEffect(() => {
-    if (!toast) return;
-    const t = setTimeout(() => setToast(''), 3000);
-    return () => clearTimeout(t);
-  }, [toast]);
-
-  async function handleAddProperty(event) {
-    event.preventDefault();
-    setError('');
-    const values = Object.fromEntries(new FormData(event.target));
-    try {
-      await api('/api/properties', { method: 'POST', body: JSON.stringify(values) });
-      setShowPropertyModal(false);
-      setToast('Property added.');
-      loadProperties();
-    } catch (err) {
-      setError(err.message);
-    }
+  useEffect(()=>{load();},[]);
+  useEffect(()=>{setExpanded(module.id);setQuery('');setStatus('');setArchived(false);setMobile(false);window.scrollTo({top:0,behavior:'instant'});},[category]);
+  useEffect(()=>{if(toast){const t=setTimeout(()=>setToast(''),4000);return()=>clearTimeout(t);}},[toast]);
+  useEffect(()=>{if(!modal||modal.type==='account')return;const previous=document.activeElement;dialog.current?.showModal();return()=>{dialog.current?.close();previous?.focus();};},[modal]);
+  function open(m){setFormError('');setModal(m);}
+  const overview=category==='overview/summary',portfolio=category==='properties/portfolio',directory=['tenants/directory','team/directory'].includes(category),report=module.id==='reports',profile=category==='settings/profile';
+  const generic=!overview&&!portfolio&&!directory&&!report&&!profile;
+  const scoped=records.filter(r=>!property||r.property_id===property),live=scoped.filter(r=>!r.archived),ps=properties.filter(p=>!property||p.id===property),us=accounts.filter(a=>!property||a.propertyId===property);
+  const rows=scoped.filter(r=>r.category===category&&r.archived===archived&&(!status||r.status===status)&&`${r.title} ${JSON.stringify(r.details)}`.toLowerCase().includes(query.toLowerCase()));
+  const users=us.filter(a=>module.id==='tenants'?a.role==='tenant':a.role!=='tenant').filter(a=>`${a.fullName} ${a.email}`.toLowerCase().includes(query.toLowerCase()));
+  const units=live.filter(r=>r.category==='units/inventory'),occupied=units.filter(r=>r.status==='Occupied').length,tenants=us.filter(a=>a.role==='tenant');
+  const receipts=live.filter(r=>r.category==='rent/receipts'&&r.status!=='Reversed'),expenses=live.filter(r=>r.category==='finance/expenses'&&r.status==='Paid'),work=live.filter(r=>r.category==='maintenance/workorders'&&r.status!=='Completed');
+  const moduleCount=id=>id==='properties'?ps.length:id==='tenants'?tenants.length:id==='team'?us.filter(a=>a.role!=='tenant').length:live.filter(r=>r.category.startsWith(id+'/')).length;
+  const sum=rs=>rs.reduce((n,r)=>n+(Number(r.details['Amount (KES)'])||0),0);
+  const pname=id=>properties.find(p=>p.id===id)?.name||'Portfolio-wide';
+  const upcoming=live.flatMap(r=>Object.entries(r.details).filter(([k,v])=>/date|due|expiry|service/i.test(k)&&/^\d{4}-\d{2}-\d{2}$/.test(String(v))&&v>=new Date().toISOString().slice(0,10)).map(([k,v])=>({...r,due:v,label:k}))).sort((a,b)=>a.due.localeCompare(b.due)).slice(0,4);
+  const metrics=[['Properties',ps.length,'Across your portfolio',Building2,'properties/portfolio'],['Occupancy',units.length?`${Math.round(occupied/units.length*100)}%`:'—',`${occupied} occupied · ${units.length} registered units`,DoorOpen,'units/inventory'],['Tenant accounts',tenants.length,'Connected to your properties',Users,'tenants/directory'],['Open work orders',work.length,'Maintenance in progress',Wrench,'maintenance/workorders']];
+  function add(seed={},seedStatus){open({type:portfolio?'property':directory?'account':'record',page,category,seed,seedStatus});}
+  function openUnit(){open({type:'record',page:findPage('units','inventory').page,category:'units/inventory',propertyId:property});}
+  async function save(e){
+    e.preventDefault();setSaving(true);setFormError('');
+    const v=Object.fromEntries(new FormData(e.currentTarget));
+    try{
+      if(modal.type==='property') await api('/api/properties',{method:'POST',body:JSON.stringify(v)});
+      else await api('/api/workspace/save',{method:'POST',body:JSON.stringify({id:modal.record?.id,category:modal.category,title:v.title,status:v.status,propertyId:v.propertyId,archived:modal.record?.archived||false,details:Object.fromEntries([...modal.page.fields.map(f=>[f.label,v[f.label]||'']),['Notes',v.Notes||'']])})});
+      setModal(null);setToast('Saved successfully.');await load();
+    }catch(err){setFormError(err.message);}finally{setSaving(false);}
   }
-
-  async function handleAddStaff(event) {
-    event.preventDefault();
-    setError('');
-    const values = Object.fromEntries(new FormData(event.target));
-    try {
-      await api('/api/users', { method: 'POST', body: JSON.stringify({ ...values, propertyId: staffPropertyId }) });
-      setShowStaffModal(false);
-      setToast(`${values.role === 'manager' ? 'Reception' : 'Maintenance'} account created.`);
-    } catch (err) {
-      setError(err.message);
-    }
-  }
-
-  return (
-    <AppShell session={session} title="Portfolio overview">
-      {toast && <div className="toast show">{toast}</div>}
-
-      <div className="section-head">
-        <h2>Your properties</h2>
-        <button className="button" onClick={() => { setError(''); setShowPropertyModal(true); }}>
-          <Plus size={14} /> Add property
-        </button>
-      </div>
-
-      {loading ? <p>Loading…</p> : properties.length === 0 ? (
-        <section className="empty">
-          <Building2 size={28} />
-          <p className="eyebrow">NO PROPERTIES YET</p>
-          <p>Add your first property to start creating reception and maintenance logins.</p>
-        </section>
-      ) : (
-        <div className="metric-grid">
-          {properties.map(p => (
-            <article key={p.id}>
-              <span>{p.address || 'No address set'}</span>
-              <strong>{p.name}</strong>
-              <button
-                className="small-button"
-                onClick={() => { setStaffPropertyId(p.id); setError(''); setShowStaffModal(true); }}
-              >
-                <UserPlus size={12} /> Add staff
-              </button>
-            </article>
-          ))}
-        </div>
-      )}
-
-      {showPropertyModal && (
-        <div className="modal-bg" onClick={() => setShowPropertyModal(false)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
-            <button className="close" onClick={() => setShowPropertyModal(false)}>×</button>
-            <p className="eyebrow">NEW PROPERTY</p>
-            <h2>Add a property</h2>
-            <form onSubmit={handleAddProperty}>
-              <label>Property name<input name="name" required /></label>
-              <label>Address<input name="address" /></label>
-              {error && <p style={{ color: '#a44545', fontSize: 12 }}>{error}</p>}
-              <button className="button full">Save property</button>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {showStaffModal && (
-        <div className="modal-bg" onClick={() => setShowStaffModal(false)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
-            <button className="close" onClick={() => setShowStaffModal(false)}>×</button>
-            <p className="eyebrow">NEW STAFF LOGIN</p>
-            <h2>Add reception or maintenance</h2>
-            <form onSubmit={handleAddStaff}>
-              <label>Full name<input name="fullName" required /></label>
-              <label>Email<input type="email" name="email" required /></label>
-              <label>Temporary password<input type="password" name="password" required minLength={6} /></label>
-              <label>Role
-                <select name="role" required defaultValue="manager">
-                  <option value="manager">Reception / Grounds manager</option>
-                  <option value="maintenance">Maintenance</option>
-                </select>
-              </label>
-              {error && <p style={{ color: '#a44545', fontSize: 12 }}>{error}</p>}
-              <button className="button full">Create login</button>
-            </form>
-          </div>
-        </div>
-      )}
-    </AppShell>
-  );
+  async function archive(){setSaving(true);try{const r=modal.record;await api('/api/workspace/save',{method:'POST',body:JSON.stringify({...r,propertyId:r.property_id,archived:!r.archived})});setModal(null);setToast(r.archived?'Record restored.':'Record archived. You can restore it from the archive.');await load();}catch(e){setFormError(e.message);}finally{setSaving(false);}}
+  function Metrics(){return <div className="pm-metrics">{metrics.map(([label,value,note,Icon,to])=><Link className="pm-metric" to={`/app/${to}`} key={label}><div><span>{label}</span><Icon size={18}/></div><strong>{value}</strong><small>{note}</small></Link>)}</div>;}
+  function Empty({filtered=false}){return <div className="pm-empty"><span className="pm-empty-icon"><module.icon size={28}/></span><h3>{filtered?'No matches in this view.':'A clean slate, ready for you.'}</h3><p>{filtered?'Change your search or filters to see other records.':page.description}</p>{!filtered&&<button className="pm-btn pm-primary" onClick={add}><Plus size={16}/>{directory?'Create account':portfolio?'Add property':'Add first record'}</button>}</div>;}
+  const results=modules.flatMap(m=>m.subs.map(s=>({...s,module:m}))).filter(s=>`${s.module.name} ${s.name} ${s.description}`.toLowerCase().includes(search.toLowerCase())).slice(0,8);
+  return <div className="pm-app" style={workspaceTheme.style}>{mobile&&<button className="pm-backdrop" aria-label="Close navigation" onClick={()=>setMobile(false)}/>}
+    <aside className={`pm-sidebar ${mobile?'is-open':''}`}><Link to="/app" className="pm-brand"><img src="/brand/owner-mark.svg" alt="" width="36" height="36" style={{display:'block',flexShrink:0,borderRadius:9}}/>NestHub<b>.</b></Link><div className="pm-workspace"><span className="pm-workspace-icon">N</span><div><strong>Property workspace</strong><small>Owner console</small></div></div><button className="pm-register-unit" disabled={loading} onClick={openUnit}><Plus size={17}/>Register unit / room</button><nav aria-label="Property management modules">{modules.map(m=><div key={m.id}>{m.group&&<p className="pm-nav-label">{m.group}</p>}<button className={`pm-nav-item ${module.id===m.id?'active':''}`} aria-expanded={expanded===m.id} onClick={()=>setExpanded(expanded===m.id?'':m.id)}><m.icon size={18}/><span>{m.name}</span><ChevronDown size={13} className={expanded===m.id?'rotated':''}/></button>{expanded===m.id&&<div className="pm-subnav">{m.subs.map(s=><Link key={s.id} aria-current={category===`${m.id}/${s.id}`?'page':undefined} className={page.id===s.id&&module.id===m.id?'active':''} to={`/app/${m.id}/${s.id}`}>{s.name}</Link>)}</div>}</div>)}</nav><div className="pm-sidebar-foot"><Link to="/app/settings/profile"><span className="pm-avatar">{session.fullName?.split(' ').map(n=>n[0]).slice(0,2).join('')}</span><div><strong>{session.fullName}</strong><small>Property owner</small></div></Link><button aria-label="Log out" onClick={async()=>{await logout().catch(()=>{});navigate('/login');}}><LogOut size={17}/></button></div></aside>
+    <div className="pm-body"><header className="pm-topbar"><div className="pm-breadcrumb"><button className="pm-mobile-toggle" aria-label="Open navigation" onClick={()=>setMobile(true)}><Menu size={21}/></button><span>Workspace</span><span>/</span><strong>{module.name}</strong></div><div className="pm-global-search"><Search size={16}/><input aria-label="Find a module" placeholder="Find anything in your workspace…" value={search} onChange={e=>setSearch(e.target.value)}/>{search&&<div className="pm-search-results">{results.length?results.map(s=><Link key={`${s.module.id}/${s.id}`} to={`/app/${s.module.id}/${s.id}`} onClick={()=>setSearch('')}><s.module.icon size={17}/><div><strong>{s.name}</strong><small>{s.module.name}</small></div><ArrowUpRight size={14}/></Link>):<p>No matching modules.</p>}</div>}</div><button className="pm-btn pm-top-add" disabled={loading} onClick={openUnit}><Plus size={16}/><span>Add unit / room</span></button><ThemeSelector theme={workspaceTheme.theme} onChange={workspaceTheme.setTheme}/><Link className="pm-top-avatar" to="/app/settings/profile" aria-label="Account settings">{session.fullName?.[0]}</Link></header>
+    <main className="pm-main"><div className="pm-heading"><div><p className="pm-kicker">YOUR PROPERTY, CONNECTED</p><h1>{overview?`Welcome back, ${session.fullName?.split(' ')[0]}`:page.name}<b>.</b></h1><p>{page.description}</p></div><div className="pm-heading-actions"><select aria-label="Filter by property" value={property} onChange={e=>setProperty(e.target.value)}><option value="">All properties</option>{properties.map(p=><option key={p.id} value={p.id}>{p.name}{p.address?' · '+p.address:''}</option>)}</select>{(overview||portfolio||directory||generic)&&<button className="pm-btn pm-primary" onClick={overview?()=>open({type:'property'}):()=>add()}><Plus size={16}/>{overview||portfolio?'Add property':designs[category]?.action||'Add record'}</button>}</div></div>
+    {!overview&&<div className="pm-tabs">{module.subs.map(s=><Link key={s.id} to={`/app/${module.id}/${s.id}`} className={page.id===s.id?'active':''}>{s.name}</Link>)}</div>}
+    {error&&<div className="pm-error" role="alert">{error}<button onClick={load}>Retry</button><Link to="/login">Sign in again</Link></div>}
+    {loading?<div className="pm-loading" role="status"><LoaderCircle className="pm-spin"/>Loading your workspace…</div>:<>
+    {overview&&<><div className="pm-overview-caption"><span><i/>Portfolio at a glance</span><span><CalendarDays size={14}/>{date(new Date())}</span></div><Metrics/><div className="pm-overview-grid"><section className="pm-panel"><div className="pm-panel-head"><div><h2>Cash flow overview</h2><p>Recorded receipts and paid expenses · last 6 months</p></div><Link to="/app/reports/financial">View report<ArrowUpRight size={15}/></Link></div><div className="pm-money-row"><div><span>All-time receipts</span><strong>{money(sum(receipts))}</strong></div><div><span>All-time expenses</span><strong>{money(sum(expenses))}</strong></div></div><div className="pm-chart">{Array.from({length:6},(_,i)=>{const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-5+i);const p=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;const a=sum(receipts.filter(r=>r.details['Payment date']?.startsWith(p))),b=sum(expenses.filter(r=>r.details['Expense date']?.startsWith(p))),max=Math.max(sum(receipts),sum(expenses),1);return <div className="pm-chart-month" key={p}><div className="pm-bars"><span title={`${money(a)} receipts`} style={{height:`${Math.max(a/max*100,1)}%`}}/><span title={`${money(b)} expenses`} style={{height:`${Math.max(b/max*100,1)}%`}}/></div><span>{d.toLocaleString('en',{month:'short'})}</span></div>;})}</div><p className="pm-chart-note">Primary bars: receipts · Muted bars: expenses. Add records to build your cash flow history.</p></section><section className="pm-quick"><p className="pm-kicker">A LITTLE LESS ADMIN</p><h2>Make room for<br/>what comes next.</h2><p>Keep your properties running smoothly, one small action at a time.</p><button onClick={()=>open({type:'account'})}>Create a tenant account<ArrowUpRight size={17}/></button><button onClick={()=>setAssignmentTarget({propertyId:property})}>Assign a unit to a tenant<ArrowUpRight size={17}/></button>{[['units','inventory','Add unit / room'],['maintenance','workorders','Log a work order']].map(([m,p,label])=><button key={m} onClick={()=>open({type:'record',page:findPage(m,p).page,category:`${m}/${p}`})}>{label}<ArrowUpRight size={17}/></button>)}</section></div><div className="pm-overview-grid"><section className="pm-panel"><div className="pm-panel-head"><div><h2>Your properties <span className="pm-count">{ps.length}</span></h2><p>The places you look after.</p></div><Link to="/app/properties/portfolio">View all<ArrowRight size={15}/></Link></div>{ps.length?ps.slice(0,3).map((p,i)=><button className="pm-property-row" key={p.id} onClick={()=>{setProperty(p.id);navigate('/app/properties/portfolio');}}><span className={`pm-building tone-${i%3}`}><Building2 size={27}/></span><div><strong>{p.name}</strong><small>{p.address||'Address not provided'}</small></div><ArrowUpRight size={18}/></button>):<p className="pm-padding">Add your first property to start your portfolio.</p>}</section><section className="pm-panel"><div className="pm-panel-head"><div><h2>Coming up</h2><p>Important dates across your workspace.</p></div><CalendarDays size={18}/></div>{upcoming.length?upcoming.map((r,i)=><Link className="pm-due-row" key={r.id+i} to={`/app/${r.category}`}><span className="pm-date-tile">{new Date(r.due).getDate()}<small>{new Date(r.due).toLocaleString('en',{month:'short'})}</small></span><div><strong>{r.title}</strong><small>{r.label} · {pname(r.property_id)}</small></div></Link>):<div className="pm-mini-empty"><CalendarDays size={28}/><h3>A little breathing room.</h3><p>No upcoming dates recorded. Add tasks, inspections, or lease renewals to see them here.</p><Link to="/app/overview/calendar">Open calendar<ArrowRight size={14}/></Link></div>}</section></div><section className="pm-panel"><div className="pm-panel-head"><div><h2>Build your workspace</h2><p>Four simple steps to a well-organized property.</p></div></div><div className="pm-checklist">{[['Add your property',ps.length,'properties/portfolio'],['Register your units',units.length,'units/inventory'],['Create tenant accounts',tenants.length,'tenants/directory'],['Record your leases',(assignments.some(a=>!a.ended_at&&(!property||a.property_id===property))||live.some(r=>r.category==='leasing/agreements')),'leasing/agreements']].map(([label,done,to],i)=><Link key={to} to={`/app/${to}`}><span className={done?'done':''}>{done?<Check size={15}/>:String(i+1).padStart(2,'0')}</span>{label}<ArrowUpRight size={14}/></Link>)}</div></section></>}
+    {portfolio&&<div className="pm-property-grid">{ps.map((p,i)=><article className="pm-panel" key={p.id}><div className={`pm-property-art tone-${i%3}`}><Building2 size={80} strokeWidth={1}/><span className="pm-chip">Managed property</span><b>{String(i+1).padStart(2,'0')}</b></div><div className="pm-property-content"><h2>{p.name}</h2><p>{p.address||'Address not provided'}</p><div className="pm-property-stats"><span><strong>{records.filter(r=>r.property_id===p.id&&!r.archived&&r.category==='units/inventory').length}</strong>Registered units</span><span><strong>{accounts.filter(a=>a.propertyId===p.id&&a.role==='tenant').length}</strong>Tenant accounts</span></div><button className="pm-btn" onClick={()=>{setProperty(p.id);navigate('/app/units/inventory');}}>Manage units<ArrowRight size={15}/></button><button className="pm-text-btn" onClick={()=>open({type:'account',propertyId:p.id})}>Create account</button></div></article>)}{!ps.length&&<Empty/>}</div>}
+    {(generic||directory)&&<PageLayouts key={category} category={category} page={page} module={module} rows={rows} users={users} allRecords={records} accounts={accounts} assignments={assignments.filter(a=>!property||a.property_id===property)} propertyName={pname} onEdit={record=>open({type:'record',record,page,category})} onAdd={add} onAssign={target=>setAssignmentTarget({propertyId:property,...target})} query={query} setQuery={setQuery} status={status} setStatus={setStatus} archived={archived} setArchived={setArchived} onExport={()=>exportCSV(category==='leasing/agreements'?[...rows.map(r=>({Type:'Agreement record',Title:r.title,Status:r.status,...r.details})),...assignments.filter(a=>(!property||a.property_id===property)&&!archived&&(!status||(a.ended_at?'Terminated':'Active')===status)&&`${accounts.find(t=>t.userId===a.tenant_id)?.fullName||''} ${records.find(r=>r.id===a.unit_id)?.title||''}`.toLowerCase().includes(query.toLowerCase())).map(a=>({Type:'Connected tenancy',Tenant:accounts.find(t=>t.userId===a.tenant_id)?.fullName,Unit:records.find(r=>r.id===a.unit_id)?.title,Property:pname(a.property_id),Status:a.ended_at?'Terminated':'Active',Rent:a.rent_amount,Deposit:a.deposit_amount,Start:a.starts_on,End:a.ends_on,Ended:a.ended_at}))]:directory?users.map(a=>({Name:a.fullName,Email:a.email,Role:a.role,Property:pname(a.propertyId)})):rows.map(r=>({Title:r.title,Property:pname(r.property_id),Status:r.status,...r.details,Updated:r.updated_at})),category.replace('/','-'))}/>}
+    {report&&<ReportLayouts page={page} records={live} properties={ps} assignments={assignments.filter(a=>!property||a.property_id===property)} accounts={us} propertyName={pname}/>}
+    {profile&&<div className="pm-profile-grid"><section className="pm-panel pm-profile"><span className="pm-profile-avatar">{session.fullName?.[0]}</span><h2>{session.fullName}</h2><p>{session.email}</p><span className="pm-chip">Property owner</span><h3>Your workspace</h3><p>{properties.length} properties · 16 modules · 48 sections</p><p>Owner access to property records and account creation.</p></section><section className="pm-panel pm-profile"><h2>A workspace for every detail.</h2><p>Use the sidebar or search to find a section. Add records, update their status, export registers, and restore archived items.</p><h3>Your portals</h3><a className="pm-portal-link" href={import.meta.env.VITE_TENANT_PORTAL_URL||'https://nesthub-tenants.vercel.app'} target="_blank" rel="noreferrer">Open tenant portal<ArrowUpRight size={17}/></a><p>Install either portal using your browser’s install or Add to Home Screen option.</p><h3>How registers work</h3><p>Entries are saved operational records. Recording an entry does not process payments, send messages, upload files, or electronically sign agreements. Documents can reference existing secure URLs.</p></section></div>}
+    </>}<footer className="pm-footer"><span>NestHub · Property management, thoughtfully organized.</span><span>Owner workspace</span></footer></main></div>
+    {assignmentTarget&&<AssignmentDialog target={assignmentTarget} records={records} accounts={accounts} assignments={assignments} properties={properties} onClose={()=>setAssignmentTarget(null)} onSaved={async message=>{setToast(message);await load();}}/>}
+    {toast&&<div className="pm-toast" role="status"><Check size={17}/>{toast}</div>}
+    {modal?.type==='account'&&<AccountDialog target={{...modal,propertyId:modal.propertyId||property,role:module.id==='team'?'manager':'tenant'}} properties={properties} records={records} assignments={assignments} onClose={()=>setModal(null)} onSaved={async message=>{setToast(message);await load();}} onUnitCreated={record=>setRecords(previous=>[record,...previous])}/>}
+    {modal&&modal.type!=='account'&&<dialog ref={dialog} className="pm-dialog" aria-labelledby="pm-modal-title" onCancel={e=>{if(saving)e.preventDefault();else setModal(null);}}><form onSubmit={save}><div className="pm-modal-head"><div><p className="pm-kicker">{modal.page?.name||'PROPERTY WORKSPACE'}</p><h2 id="pm-modal-title">{modal.type==='property'?'Add a property':modal.type==='account'?'Create an account':modal.record?(modal.category==='units/inventory'?'Edit unit':`Edit ${modal.page.name.toLowerCase()}`):designs[modal.category]?.action||'Add a record'}</h2></div><button type="button" className="pm-icon-btn" aria-label="Close dialog" disabled={saving} onClick={()=>setModal(null)}><X size={21}/></button></div><div className="pm-modal-content">{modal.type==='property'?<><label>Property name<input autoFocus name="name" required maxLength={255}/></label><label>Address<input name="address" maxLength={255}/></label></>:<><label>Property<select name="propertyId" required={modal.type==='account'||modal.category==='units/inventory'} defaultValue={modal.record?.property_id||modal.propertyId||property||(modal.type==='account'||modal.category==='units/inventory'?properties[0]?.id:'')}>{modal.type!=='account'&&<option value="">{modal.category==='units/inventory'?'Choose a property':'Portfolio-wide'}</option>}{properties.map(p=><option key={p.id} value={p.id}>{p.name}{p.address?' · '+p.address:''}</option>)}</select></label>{modal.type==='account'?<><p className="pm-form-note">Creates a working login. Share credentials directly with the account holder.</p><label>Full name<input autoFocus name="fullName" required maxLength={255}/></label><label>Email address<input name="email" type="email" required/></label><label>Temporary password<input name="password" type="password" minLength={6} required autoComplete="new-password"/></label><label>Account role<select name="role" defaultValue={module.id==='team'?'manager':'tenant'}><option value="tenant">Tenant</option><option value="manager">Reception / Grounds manager</option><option value="maintenance">Maintenance</option></select></label><p className="nx-inline-guide">After creating a tenant account, you can assign a registered vacant unit in the next step.</p>{!properties.length&&<p className="pm-error">Add a property before creating an account.</p>}</>:<>{modal.category==='units/inventory'&&<p className="pm-form-note">Register any rentable apartment, bedsitter, studio, room, shop or office here. Vacant spaces appear when you add a tenant.</p>}<label>{modal.category==='units/inventory'?'Unit / room number':'Record title'}<input autoFocus name="title" required maxLength={255} defaultValue={modal.record?.title}/></label><label>Status<select name="status" defaultValue={modal.record?.status||modal.seedStatus||modal.page.statuses[0]}>{modal.page.statuses.filter(s=>modal.category!=='units/inventory'||s!=='Occupied'||modal.record?.status==='Occupied').map(s=><option key={s}>{s}</option>)}</select></label><div className="pm-form-grid">{modal.page.fields.map(f=><label key={f.label}>{f.label}{f.label==='Unit type'?<select name={f.label} defaultValue={modal.record?.details[f.label]||'Apartment'}>{unitTypes.map(t=><option key={t}>{t}</option>)}</select>:/text|items|Message|Procedure/i.test(f.label)?<textarea name={f.label} maxLength={3000} rows={3} defaultValue={modal.record?.details[f.label]||modal.seed?.[f.label]}/>:<input name={f.label} type={f.type} step={f.type==='number'?'any':undefined} min={f.type==='number'&&f.label!=='Difference (KES)'?'0':undefined} maxLength={1000} defaultValue={modal.record?.details[f.label]||modal.seed?.[f.label]}/>}</label>)}</div><label>Notes<textarea name="Notes" rows={3} maxLength={3000} defaultValue={modal.record?.details.Notes}/></label></>}</>}{formError&&<p className="pm-error" role="alert">{formError}</p>}</div><div className="pm-modal-foot">{modal.record&&<button type="button" className="pm-btn" disabled={saving} onClick={archive}><Archive size={15}/>{modal.record.archived?'Restore':'Archive'}</button>}<button type="button" className="pm-btn" disabled={saving} onClick={()=>setModal(null)}>Cancel</button><button className="pm-btn pm-primary" disabled={saving||(modal.type==='account'&&!properties.length)}>{saving?<LoaderCircle className="pm-spin" size={16}/>:<Check size={16}/>} {saving?'Saving…':modal.type==='account'?'Create login':modal.category==='units/inventory'?'Save unit / room':'Save changes'}</button></div></form></dialog>}
+  </div>;
 }

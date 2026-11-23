@@ -16,3 +16,10 @@ tenant-portal/dist/
 .vscode/
 *.iml
 _cert_verify/
+.vercel/
+supabase/.temp/
+.operations-test-ids.json
+.recovery-test*
+.firebase/
+output/
+tmp/

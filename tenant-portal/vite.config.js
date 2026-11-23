@@ -7,17 +7,26 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      includeAssets: ['brand/tenant-mark.svg', 'brand/tenant-favicon.ico', 'brand/tenant-180.png', 'brand/tenant-32.png'],
       manifest: {
-        name: 'NestHub Tenant Portal',
-        short_name: 'NestHub',
+        name: 'NestHub Tenants',
+        short_name: 'NH Tenants',
         description: 'Pay rent, raise tickets, stay connected to your building.',
-        theme_color: '#4f46e5',
+        theme_color: '#A53F37',
         background_color: '#f7f7fc',
         display: 'standalone',
+        id: '/',
+        start_url: '/',
+        scope: '/',
         icons: [
-          { src: 'pwa-192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'pwa-512.png', sizes: '512x512', type: 'image/png' }
+          { src: '/brand/tenant-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: '/brand/tenant-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: '/brand/tenant-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
         ]
+      },
+      workbox: {
+        navigateFallbackDenylist: [/^\/api\//],
+        runtimeCaching: [{ urlPattern: /^https?:\/\/.*\/api\/.*/, handler: 'NetworkOnly' }]
       }
     })
   ]

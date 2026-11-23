@@ -3,7 +3,7 @@ import { useState } from 'react';
 import {
   LayoutGrid, Wallet, Wrench, Users, Bell, UserRound, LogOut, Menu, X,
 } from 'lucide-react';
-import { clearSession } from '../../api/client.js';
+import { logout } from '../../api/client.js';
 import { useStore } from '../../data/mockStore.jsx';
 
 const NAV = [
@@ -22,9 +22,8 @@ export default function DashboardLayout() {
   const unread = notifications.filter((n) => !n.read).length;
   const initials = profile.name.split(' ').map((p) => p[0]).slice(0, 2).join('');
 
-  function handleLogout() {
-    clearSession();
-    navigate('/login');
+  async function handleLogout() {
+    try { await logout(); } finally { navigate('/login'); }
   }
 
   return (
@@ -43,7 +42,7 @@ export default function DashboardLayout() {
 
       <aside className={`db-sidebar ${mobileOpen ? 'db-sidebar-open' : ''}`} aria-label="Tenant navigation">
         <div className="db-brand">
-          <span className="tp-mark">n</span>
+          <img src="/brand/tenant-mark.svg" alt="" width="36" height="36" style={{display:'block',flexShrink:0,borderRadius:9}}/>
           <span>NestHub</span>
         </div>
 

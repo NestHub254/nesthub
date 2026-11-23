@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { api, saveSession } from '../api/client.js';
-import SocialAuthButtons from '../components/SocialAuthButtons.jsx';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -14,7 +13,7 @@ export default function Login() {
     setLoading(true);
     const values = Object.fromEntries(new FormData(event.target));
     try {
-      const result = await api('/api/auth/login', { method: 'POST', body: JSON.stringify(values) });
+      const result = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ ...values, portal: 'tenant' }) });
       if (result.role !== 'tenant') {
         throw new Error('This portal is for tenant accounts only.');
       }
@@ -31,7 +30,7 @@ export default function Login() {
     <div className="tp-page">
       <div className="tp-card">
         <div className="tp-form-side">
-          <span className="tp-brand"><span className="tp-mark">n</span>NestHub</span>
+          <span className="tp-brand"><img src="/brand/tenant-mark.svg" alt="" width="36" height="36" style={{display:'block',flexShrink:0,borderRadius:9}}/>NestHub</span>
           <p className="tp-eyebrow">Tenant Portal</p>
           <h1>Welcome back.</h1>
           <p className="tp-sub">Log in with the account your building's reception team set up for you.</p>
@@ -49,8 +48,6 @@ export default function Login() {
             {error && <p className="tp-error">{error}</p>}
             <button className="tp-btn" disabled={loading}>{loading ? 'Logging in…' : 'Log in'}</button>
           </form>
-
-          <SocialAuthButtons />
 
           <p className="tp-fine">Don't have a login yet? Ask your building's reception desk to create one for you.</p>
         </div>

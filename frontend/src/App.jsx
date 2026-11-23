@@ -3,18 +3,9 @@ import { getSession } from './api/client.js';
 import Landing from './pages/Landing.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
-import TenantHome from './pages/tenant/TenantHome.jsx';
-import OwnerHome from './pages/owner/OwnerHome.jsx';
-import ManagerHome from './pages/manager/ManagerHome.jsx';
-import MaintenanceHome from './pages/maintenance/MaintenanceHome.jsx';
 import { useRobotsMeta } from './seo/useRobotsMeta.js';
-
-const roleHome = {
-  tenant: TenantHome,
-  owner: OwnerHome,
-  manager: ManagerHome,
-  maintenance: MaintenanceHome
-};
+import ForgotPassword from './pages/ForgotPassword.jsx';
+import PropertyApp from './pages/operations/PropertyApp.jsx';
 
 function RequireAuth({ children }) {
   const session = getSession();
@@ -25,8 +16,8 @@ function RequireAuth({ children }) {
 function Dashboard() {
   useRobotsMeta('noindex, nofollow');
   const session = getSession();
-  const Home = roleHome[session?.role] || TenantHome;
-  return <Home session={session} />;
+  if(!session||session.role==='tenant')return <Navigate to="/login" replace/>;
+  return <PropertyApp session={session} />;
 }
 
 export default function App() {
@@ -35,8 +26,10 @@ export default function App() {
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
       <Route
-        path="/app"
+        path="/app/*"
         element={
           <RequireAuth>
             <Dashboard />

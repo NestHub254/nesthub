@@ -1,0 +1,3 @@
+[functions.nesthub-api]
+# Password/Google login is public. Every data route verifies a server-side session.
+verify_jwt = false

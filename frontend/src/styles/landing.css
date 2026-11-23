@@ -3,7 +3,7 @@
    Clean modern redesign · light theme · scroll animations
 ========================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
 
 :root{
   /* palette — light, no dark sections */
@@ -32,14 +32,14 @@
   --radius:18px;
   --radius-lg:26px;
 
-  --font-head:'Sora',sans-serif;
-  --font-body:'Inter',sans-serif;
+  --font-head:Arial, Helvetica, sans-serif;
+  --font-body:Arial, Helvetica, sans-serif;
 }
 
 *{ margin:0; padding:0; box-sizing:border-box; }
 html{ scroll-behavior:smooth; }
 body{
-  font-family:var(--font-body);
+  font-family:Arial, Helvetica, sans-serif;
   color:var(--ink);
   background:var(--bg);
   -webkit-font-smoothing:antialiased;
@@ -48,8 +48,8 @@ body{
 img{ max-width:100%; display:block; }
 a{ text-decoration:none; color:inherit; }
 ul{ list-style:none; }
-button{ font-family:inherit; cursor:pointer; }
-h1,h2,h3,h4,h5{ font-family:var(--font-head); color:var(--ink); line-height:1.15; }
+button{ font-family:Arial, Helvetica, sans-serif; cursor:pointer; }
+h1,h2,h3,h4,h5{ font-family:Arial, Helvetica, sans-serif; color:var(--ink); line-height:1.15; }
 
 .lp-page{ position:relative; width:100%; }
 
@@ -89,7 +89,7 @@ section.lp-section-muted{ padding:5.5rem 4rem; }
 /* ===================== buttons ===================== */
 .lp-btn{
   display:inline-flex; align-items:center; justify-content:center; gap:8px;
-  font-family:var(--font-body); font-weight:600; font-size:.95rem;
+  font-family:Arial, Helvetica, sans-serif; font-weight:600; font-size:.95rem;
   padding:12px 22px; border-radius:100px; border:1px solid transparent;
   transition:transform .25s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease;
   white-space:nowrap;
@@ -140,7 +140,7 @@ section.lp-section-muted{ padding:5.5rem 4rem; }
   border:1px solid var(--line); border-radius:100px;
   box-shadow:var(--shadow-sm);
 }
-.lp-brand{ display:flex; align-items:center; gap:10px; font-family:var(--font-head); font-weight:700; font-size:1.2rem; }
+.lp-brand{ display:flex; align-items:center; gap:10px; font-family:Arial, Helvetica, sans-serif; font-weight:700; font-size:1.2rem; }
 .lp-mark{
   width:34px; height:34px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center;
   background:linear-gradient(135deg,var(--primary),#4d78ff); color:#fff; font-size:1rem;
@@ -153,7 +153,13 @@ section.lp-section-muted{ padding:5.5rem 4rem; }
 }
 .lp-nav-links a:hover{ color:var(--ink); }
 .lp-nav-links a:hover::after{ width:100%; }
-.lp-nav-actions{ display:flex; gap:.7rem; }
+.lp-nav-actions{ display:flex; gap:.7rem; flex-wrap:wrap; }
+@media(max-width:1100px){ .lp-nav-links{ display:none; } }
+@media(max-width:600px){
+  .lp-nav{ flex-wrap:wrap; gap:12px; }
+  .lp-nav-actions{ width:100%; gap:6px; }
+  .lp-nav-actions .lp-btn{ flex:1; padding:10px 8px; font-size:.78rem; }
+}
 
 /* ===================== hero ===================== */
 .lp-hero{
@@ -259,7 +265,7 @@ section.lp-section-muted{ padding:5.5rem 4rem; }
 .lp-chain-step:hover{ transform:translateY(-6px); box-shadow:var(--shadow-md); }
 .lp-chain-num{
   width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-  background:var(--primary-light); color:var(--primary); font-weight:700; font-family:var(--font-head);
+  background:var(--primary-light); color:var(--primary); font-weight:700; font-family:Arial, Helvetica, sans-serif;
   margin-bottom:1rem;
 }
 .lp-chain-step h4{ font-size:1.02rem; margin-bottom:.5rem; }
@@ -278,6 +284,7 @@ section.lp-section-muted{ padding:5.5rem 4rem; }
 .lp-check p{ font-size:.82rem; color:var(--ink-soft); line-height:1.5; margin:0; max-width:none; }
 
 .lp-highlight-image{ position:relative; }
+.lp-dashboard-note{position:absolute;top:12px;left:12px;z-index:4;padding:8px 12px;border:1px solid rgba(255,255,255,.7);border-radius:999px;background:rgba(255,255,255,.92);color:var(--ink-soft);font-size:.72rem;font-weight:700;box-shadow:var(--shadow-sm)}
 .lp-highlight-image img{
   width:100%; height:440px; object-fit:cover; border-radius:var(--radius-lg); box-shadow:var(--shadow-lg);
 }
@@ -402,7 +409,7 @@ section.lp-section-muted{ padding:5.5rem 4rem; }
 .lp-price-card h3{ font-size:1.15rem; margin-bottom:.4rem; }
 .lp-price-card .lp-price-tagline{ font-size:.85rem; color:var(--ink-soft); margin-bottom:1.4rem; min-height:2.6em; }
 .lp-price-amount{ display:flex; align-items:baseline; gap:6px; margin-bottom:1.6rem; }
-.lp-price-amount strong{ font-size:2.3rem; font-family:var(--font-head); font-weight:800; }
+.lp-price-amount strong{ font-size:2.3rem; font-family:Arial, Helvetica, sans-serif; font-weight:800; }
 .lp-price-amount span{ color:var(--ink-faint); font-size:.85rem; }
 .lp-price-features{ flex:1; margin-bottom:1.8rem; }
 .lp-price-features li{ display:flex; gap:9px; font-size:.86rem; color:var(--ink-soft); padding:8px 0; align-items:flex-start; }
@@ -418,7 +425,7 @@ section.lp-section-muted{ padding:5.5rem 4rem; }
 .lp-form-field span{ display:block; font-size:.84rem; font-weight:600; margin-bottom:.4rem; }
 .lp-form-field input, .lp-form-field textarea{
   width:100%; padding:11px 14px; border-radius:10px; border:1px solid var(--line);
-  font-family:var(--font-body); font-size:.92rem; background:var(--bg-tint);
+  font-family:Arial, Helvetica, sans-serif; font-size:.92rem; background:var(--bg-tint);
   transition:border-color .2s ease, background .2s ease;
 }
 .lp-form-field input:focus, .lp-form-field textarea:focus{
@@ -540,4 +547,52 @@ section.lp-section-muted{ padding:5.5rem 4rem; }
   .lp-hero-panel{ position:static; width:100%; margin-top:1rem; }
   .lp-floating-card{ position:static; width:fit-content; margin-top:1rem; }
   .lp-hero-visual{ height:auto; }
+  .lp-dashboard-card.large{ left:0; }
+  .lp-dashboard-card.small{ width:min(150px,calc(100% - 16px)); padding:14px 16px; }
+  .card-occupancy{ top:8px; right:0; }
+  .card-maintenance{ right:0; }
+}
+
+/* Mobile navigation and compact-phone spacing */
+.lp-mobile-menu{display:none;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--ink)}
+@media(max-width:1100px){
+  .lp-nav{position:sticky;top:8px;z-index:50}
+  .lp-mobile-menu{display:inline-flex;margin-left:auto;flex-shrink:0}
+  .lp-nav-links{display:none}
+  .lp-nav-open .lp-nav-links{display:grid;grid-column:1/-1;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;width:100%;padding-top:8px;border-top:1px solid var(--line)}
+  .lp-nav-open .lp-nav-links a{padding:10px 8px;border-radius:9px;font-size:.88rem}
+  .lp-nav-open .lp-nav-links a:hover{background:var(--bg-tint)}
+  .lp-nav-open .lp-nav-links a::after{display:none}
+  .lp-nav-actions{flex-wrap:nowrap}
+}
+@media(max-width:600px){
+  .lp-nav{display:grid;grid-template-columns:minmax(0,1fr) 42px auto;align-items:center;justify-content:initial;width:calc(100% - 24px);margin-top:8px;padding:10px 12px;border-radius:18px;gap:8px;min-width:0}
+  .lp-brand{min-width:0;white-space:nowrap;font-size:1rem;gap:8px}
+  .lp-mobile-menu{grid-column:2;grid-row:1;margin:0}
+  .lp-nav-actions{grid-column:3;grid-row:1;width:auto;min-width:0;margin:0;gap:0}
+  .lp-nav-actions .lp-btn{flex:0 0 auto;padding:9px 8px;font-size:.74rem;white-space:nowrap}
+  .lp-nav-actions .lp-btn-ghost{display:none}
+  .lp-nav-actions .lp-tenant-link{display:none}
+  .lp-nav-open{grid-template-columns:minmax(0,1fr) 42px}
+  .lp-nav-open .lp-nav-links{grid-column:1/-1;grid-row:2;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .lp-nav-open .lp-nav-actions{grid-column:1/-1;grid-row:3;display:flex;width:100%;gap:8px}
+  .lp-nav-open .lp-nav-actions .lp-btn{flex:1 1 0}
+  .lp-nav-open .lp-nav-actions .lp-btn-ghost:not(.lp-tenant-link){display:inline-flex}
+  .lp-hero{width:calc(100% - 36px);padding-top:2.4rem}
+  .lp-hero h1{font-size:clamp(2.25rem,10vw,3.2rem)}
+  .lp-lead{font-size:1rem;line-height:1.65}
+  .lp-hero-actions{gap:.65rem;margin-bottom:1.4rem}
+  .lp-hero-actions .lp-btn{flex:1;padding:12px 14px;font-size:.9rem}
+  .lp-badges{gap:8px}
+  .lp-badges li{font-size:.78rem;padding:9px 11px}
+  .lp-section{padding:4.2rem 0}
+  section.lp-section-muted{padding:3rem 1rem}
+}
+@media(max-width:380px){
+  .lp-nav{width:calc(100% - 16px);padding-inline:8px;gap:5px}
+  .lp-brand{font-size:.94rem;gap:6px}
+  .lp-brand img{width:32px;height:32px}
+  .lp-nav-actions .lp-btn{padding:8px 6px;font-size:.68rem}
+  .lp-mobile-menu{width:38px;height:38px}
+  .lp-nav-open{grid-template-columns:minmax(0,1fr) 38px}
 }
