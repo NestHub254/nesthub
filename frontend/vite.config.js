@@ -28,7 +28,7 @@ export default defineConfig({
         ]
       },
       workbox: {
-        navigateFallbackDenylist: [/^\/api\//],
+        navigateFallbackDenylist: [/^\/api\//, /^\/tenant(?:\/|$)/],
         // Network-first: a deployed update should never be hidden behind a stale cache.
         runtimeCaching: [
           {
