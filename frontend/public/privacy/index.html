@@ -1,133 +1,67 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Privacy Policy | NestHub</title>
-  <meta name="description" content="NestHub privacy policy: how personal information is collected, used, protected, and how you can exercise your privacy rights." />
-  <link rel="canonical" href="https://nesthub.sionaglobal.com/privacy/" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Learn what personal information NestHub handles, why it is used, and how to exercise your privacy rights." />
   <meta name="robots" content="index,follow" />
-  <meta property="og:title" content="Privacy Policy | NestHub" />
-  <meta property="og:url" content="https://nesthub.sionaglobal.com/privacy/" />
-  <meta property="og:type" content="website" />
+  <link rel="canonical" href="https://nesthub.sionaglobal.com/privacy/" />
   <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-  <style>
-    :root { --ink:#1d2335; --muted:#5c657a; --line:#e7e8ef; --paper:#fbfbfd; --brand:#102b25; --accent:#3d6b52; }
-    * { box-sizing: border-box; }
-    body { margin:0; font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; color:var(--ink); background:var(--paper); line-height:1.65; }
-    header { border-bottom:1px solid var(--line); background:#fff; }
-    .wrap { width:min(760px, 92%); margin:0 auto; }
-    .nav { display:flex; justify-content:space-between; align-items:center; padding:1rem 0; }
-    .brand { font-weight:700; color:var(--brand); text-decoration:none; }
-    .nav a { color:var(--muted); text-decoration:none; font-size:.92rem; }
-    main { padding:2.5rem 0 4rem; }
-    h1 { font-size:clamp(1.6rem, 3vw, 2.1rem); line-height:1.2; margin:0 0 .5rem; }
-    .meta { color:var(--muted); font-size:.9rem; margin-bottom:2rem; }
-    h2 { font-size:1.15rem; margin:2rem 0 .75rem; }
-    p, li { color:var(--ink); font-size:.97rem; }
-    ul { padding-left:1.2rem; }
-    a { color:var(--accent); }
-    footer { border-top:1px solid var(--line); padding:1.5rem 0 2.5rem; color:var(--muted); font-size:.85rem; }
-    footer a { color:var(--muted); }
-  </style>
+  <link rel="stylesheet" href="/legal.css" />
+  <title>Privacy Policy | NestHub</title>
 </head>
 <body>
-  <header>
-    <div class="wrap nav">
-      <a class="brand" href="/">NestHub</a>
-      <a href="/">Back to home</a>
+  <header class="site-header"><div class="header-inner">
+    <a class="brand" href="/"><img src="/brand/owner-mark.svg" alt="" />NestHub</a>
+    <nav class="header-links" aria-label="Main navigation"><a href="/terms/">Terms</a><a href="/data-deletion/">Data deletion</a><a class="back-link" href="/">Back to NestHub</a></nav>
+  </div></header>
+  <main class="page-shell">
+    <section class="hero"><p class="eyebrow">Privacy and personal information</p><h1>Privacy Policy</h1>
+      <p class="hero-summary">This policy explains what information is handled when you use NestHub, how it supports the service, and how to ask about your information.</p>
+      <span class="updated">Updated 23 November 2026</span>
+    </section>
+    <div class="content-layout">
+      <aside class="contents"><h2>On this page</h2><nav aria-label="Policy contents">
+        <a href="#responsibility">Who is responsible</a><a href="#information">Information handled</a><a href="#use">How information is used</a><a href="#sharing">Service providers</a><a href="#storage">Storage and security</a><a href="#retention">Retention</a><a href="#rights">Your choices and rights</a><a href="#contact">Contact and complaints</a>
+      </nav></aside>
+      <article class="article-card">
+        <section id="responsibility"><h2>1. Who is responsible</h2>
+          <p>NestHub is a rental and property operations platform developed with SIONA Technologies Limited as its technology partner. For questions about this policy or the website, contact the NestHub team by phone or WhatsApp using the details below.</p>
+          <p>For information entered into a property workspace about a tenancy, rent, or a maintenance request, the property owner or manager who operates that workspace decides why the records are used and is normally the first contact for a tenant request. NestHub and its technology providers may handle those records to operate the service for that property.</p>
+        </section>
+        <section id="information"><h2>2. Information handled</h2>
+          <p>The information depends on the features used and may include:</p>
+          <ul><li>account details such as name, email address, role, and login credentials;</li><li>property, unit, tenancy, and staff assignment details entered by a workspace;</li><li>rent amounts, due dates, payment references, and payment status recorded by the workspace;</li><li>maintenance reports, messages, notices, and related attachments or links;</li><li>demo or support enquiry details submitted through the website; and</li><li>basic technical information needed to keep the service available, prevent abuse, and diagnose faults.</li></ul>
+          <p>Passwords are processed by the authentication service as password hashes; they are not stored in the application database as readable passwords. If you choose Google sign-in, Google provides an identity token used to authenticate your account.</p>
+        </section>
+        <section id="use"><h2>3. How information is used</h2>
+          <p>Information is used to create and secure accounts, show each user the records allowed by their role, operate property and tenant workflows, deliver requested notices, respond to enquiries, maintain the platform, and meet applicable legal obligations.</p>
+          <p>The website demo form is processed by Formspree so the NestHub team can receive and respond to demo enquiries. Account and workspace features use NestHub’s hosted application services.</p>
+        </section>
+        <section id="sharing"><h2>4. Service providers and access</h2>
+          <p>Information may be available to the workspace owner or manager and to staff they authorise. To host and operate NestHub, relevant data may also be processed by infrastructure and service providers, including Supabase, Firebase, Vercel, Google sign-in, Formspree, and the email provider configured for a workspace.</p>
+          <p>Providers receive information needed for their service and are expected to protect it under their applicable terms and safeguards. NestHub does not sell personal information.</p>
+        </section>
+        <section id="storage"><h2>5. Storage and security</h2>
+          <p>NestHub uses access controls intended to restrict workspace records by account role and property. Browser storage is used to keep a signed-in session on the device. Keep your device and account credentials secure, and sign out when using a shared device.</p>
+          <p>Hosting or service providers may process information outside Kenya. Appropriate safeguards should apply to any transfer where required by applicable law. No internet service can promise that transmission or storage is completely risk-free.</p>
+        </section>
+        <section id="retention"><h2>6. Retention</h2>
+          <p>Information is kept for as long as it is needed for the service, the property workspace, support, security, or legal obligations. Retention may vary by record type. A property owner or manager may also need to keep tenancy or payment records for their own operational or legal purposes.</p>
+        </section>
+        <section id="rights"><h2>7. Your choices and rights</h2>
+          <p>Depending on the applicable law and circumstances, you may ask to be informed about, access, correct, object to, restrict, or request erasure or portability of personal information. Kenya’s Data Protection Act, 2019 sets out data subject rights and the Office of the Data Protection Commissioner provides guidance on exercising them.</p>
+          <p>If the information is held in a property workspace, contact the owner or manager first. To request deletion of NestHub account or website enquiry information, follow the <a href="/data-deletion/">data deletion instructions</a>. A request may need identity verification, and some records may need to be retained where the law permits or requires it.</p>
+          <p>You may also contact the Office of the Data Protection Commissioner in Kenya if you wish to raise a complaint.</p>
+        </section>
+        <section id="contact"><h2>8. Contact and complaints</h2>
+          <p>For privacy questions or to make a request, call or WhatsApp NestHub at <a href="tel:+254701388400">+254 701 388 400</a>. Please do not send passwords, one-time codes, or full payment credentials in a request.</p>
+          <p>This policy may be updated as the service changes. The latest revision date appears at the top of this page.</p>
+        </section>
+        <div class="notice">For questions about a specific tenancy, rent record, or repair request, contact the property manager who operates that NestHub workspace.</div>
+      </article>
     </div>
-  </header>
-  <main class="wrap">
-    <h1>Privacy Policy</h1>
-    <p class="meta">Last updated: 11 November 2026</p>
-
-    <h2>1. About NestHub</h2>
-    <p>NestHub is a property management platform designed to help property owners and property management businesses manage their operations.</p>
-    <p>NestHub works with <a href="https://sionaglobal.com" rel="noopener noreferrer">SIONA Technologies Limited</a> as its technology partner.
-      Relevant technology providers may process personal information as necessary to provide authorised NestHub services.</p>
-    <p>For NestHub privacy enquiries, contact
-      <a href="mailto:hello@nesthub.app">hello@nesthub.app</a>
-      or +254 701 388 400.</p>
-
-    <h2>2. Personal information we may collect</h2>
-    <p>Depending on how NestHub is used, personal information may include:</p>
-    <ul>
-      <li>names, email addresses and telephone numbers;</li>
-      <li>account and login details;</li>
-      <li>roles and workspace associations (for example owner, staff or tenant);</li>
-      <li>property and unit references entered into a workspace;</li>
-      <li>messages or enquiry details submitted through NestHub contact channels; and</li>
-      <li>basic technical information needed to operate and secure the service.</li>
-    </ul>
-
-    <h2>3. Why information is used</h2>
-    <p>Personal information may be used to:</p>
-    <ul>
-      <li>provide NestHub accounts and workspaces;</li>
-      <li>support property and tenant management features;</li>
-      <li>respond to enquiries and support requests;</li>
-      <li>operate, maintain and secure the platform; and</li>
-      <li>meet applicable legal obligations.</li>
-    </ul>
-    <p>Where required under the Kenya Data Protection Act, 2019, processing relies on one or more lawful grounds such as consent, performance of a contract, a legal obligation, or other grounds permitted by law.</p>
-
-    <h2>4. Responsibilities for workspace information</h2>
-    <p>Property owners and property-management businesses determine the purposes for which their tenant and property information is collected and used, where they act as controllers of that information.</p>
-    <p>Technology service providers process personal information as necessary to deliver and maintain authorised NestHub services, in accordance with applicable agreements and instructions.</p>
-    <p>For questions about information held within a particular property workspace, tenants should first contact the relevant property owner or property manager.</p>
-
-    <h2>5. Who may receive information</h2>
-    <p>Depending on the service used, personal information may be shared with:</p>
-    <ul>
-      <li>the property owner or property manager responsible for a workspace;</li>
-      <li>authorised NestHub staff supporting the platform;</li>
-      <li>cloud hosting and infrastructure providers used to operate the NestHub website and related services; and</li>
-      <li>communications or online form providers used for NestHub website enquiries, where those tools are enabled.</li>
-    </ul>
-    <p>Personal information is not sold.</p>
-
-    <h2>6. How information is protected</h2>
-    <p>NestHub and its technology partners take appropriate technical and organisational measures to protect personal information and limit access to authorised parties.
-      No method of transmission or storage can be guaranteed to be completely secure.</p>
-
-    <h2>7. Retention</h2>
-    <p>Personal information is kept only for as long as reasonably necessary for the purposes described in this policy, or as required by applicable law or legitimate legal obligations.
-      Retention needs may differ depending on the type of record involved. Specific retention periods are determined according to those purposes and obligations.</p>
-
-    <h2>8. International transfers</h2>
-    <p>NestHub’s hosting and related technology providers may process personal information in countries outside Kenya.
-      Where that happens, appropriate safeguards are applied in line with applicable law.</p>
-
-    <h2>9. Your rights</h2>
-    <p>Subject to the Kenya Data Protection Act, 2019 and other applicable law, you may have the right to:</p>
-    <ul>
-      <li>be informed about how your personal information is used;</li>
-      <li>access your personal information;</li>
-      <li>object to certain processing;</li>
-      <li>request correction of inaccurate information;</li>
-      <li>request erasure of your personal information;</li>
-      <li>request restriction of processing where applicable;</li>
-      <li>request data portability where applicable; and</li>
-      <li>lodge a complaint with the Office of the Data Protection Commissioner.</li>
-    </ul>
-    <p>To exercise these rights, contact
-      <a href="mailto:hello@nesthub.app">hello@nesthub.app</a>
-      or +254 701 388 400.
-      Deletion requests are also described on the <a href="/data-deletion/">Data Deletion</a> page.</p>
-
-    <h2>10. Contact</h2>
-    <p>For general NestHub privacy enquiries or complaints:</p>
-    <p>
-      Email: <a href="mailto:hello@nesthub.app">hello@nesthub.app</a><br />
-      Phone / WhatsApp: +254 701 388 400
-    </p>
   </main>
-  <footer>
-    <div class="wrap">
-      <p><a href="/">Home</a> · <a href="/privacy/">Privacy</a> · <a href="/data-deletion/">Data deletion</a></p>
-      <p>NestHub works with <a href="https://sionaglobal.com" rel="noopener noreferrer">SIONA Technologies Limited</a> as its technology partner.</p>
-    </div>
-  </footer>
+  <footer class="site-footer"><div class="footer-inner"><span>NestHub · Property management platform</span><nav class="footer-links" aria-label="Legal links"><a href="/">Home</a><a href="/terms/">Terms of Service</a><a href="/data-deletion/">Data deletion</a><a href="https://sionaglobal.com">SIONA Technologies</a></nav></div></footer>
 </body>
 </html>

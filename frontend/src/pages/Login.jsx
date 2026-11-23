@@ -66,6 +66,7 @@ export default function Login() {
           <GoogleSignIn />
           <small><Link className="link" to="/forgot-password">Forgot password?</Link></small>
           <small>New owner? <Link className="link" to="/register">Create an account</Link></small>
+          <small><a className="link" href="/privacy/">Privacy</a> · <a className="link" href="/terms/">Terms</a> · <a className="link" href="/data-deletion/">Data deletion</a></small>
         </section>
       </main>
     </div>

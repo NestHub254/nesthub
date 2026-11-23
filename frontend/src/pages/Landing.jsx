@@ -13,7 +13,7 @@ const WHATSAPP_NUMBER = '254701388400';
 const PHONE_DISPLAY = '0701 388 400';
 const FORM_ENDPOINT = 'https://formspree.io/f/xwpnwkoe';
 const USD_RATE = 129; // KES per USD, used for the display toggle only
-const TENANT_PORTAL_URL = import.meta.env.VITE_TENANT_PORTAL_URL || 'http://localhost:5174';
+const TENANT_PORTAL_URL = import.meta.env.VITE_TENANT_PORTAL_URL || 'https://nesthub-tenants.vercel.app';
 
 const CORE_MODULES = [
   { icon: Building2, label: 'Property Management' },
@@ -527,7 +527,7 @@ export default function Landing() {
                 {demoStatus === 'sending' ? <Loader2 size={16} className="lp-spin" /> : <Send size={16} />}
                 {demoStatus === 'sending' ? 'Sending…' : 'Request a demo'}
               </button>
-              <p className="lp-form-status">Your details are sent to Formspree to handle this demo request. See our <a href="/privacy.html">Privacy notice</a>.</p>
+              <p className="lp-form-status">Your details are sent to Formspree to handle this demo request. See our <a href="/privacy/">Privacy notice</a>.</p>
               {demoStatus === 'sent' && <p className="lp-form-status lp-form-status-ok"><CheckCircle2 size={15} /> Thanks — we'll be in touch within one business day.</p>}
               {demoStatus === 'error' && <p className="lp-form-status lp-form-status-error">Something went wrong. Please call or WhatsApp us instead.</p>}
             </form>
@@ -646,6 +646,7 @@ export default function Landing() {
           </div>
           <div className="lp-footer-legal">
             <a href="/privacy/">Privacy Policy</a>
+            <a href="/terms/">Terms of Service</a>
             <a href="/data-deletion/">Data Deletion</a>
           </div>
         </div>

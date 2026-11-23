@@ -77,7 +77,7 @@ export default function Register() {
           <div className="or"><i></i>or<i></i></div>
           <GoogleSignIn register />
           <small>Already have an account? <Link className="link" to="/login">Log in</Link></small>
-          <small><a className="link" href="/privacy.html">Privacy notice</a> · <a className="link" href="/terms.html">Service terms</a></small>
+          <small><a className="link" href="/privacy/">Privacy notice</a> · <a className="link" href="/terms/">Service terms</a> · <a className="link" href="/data-deletion/">Data deletion</a></small>
           <small style={{ marginTop: 8, display: 'block' }}>
             <ClipboardList size={12} style={{ verticalAlign: '-2px', marginRight: 4 }} />
             Reception or maintenance? Ask your owner to create your login — this page is owner-only.
