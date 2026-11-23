@@ -59,13 +59,6 @@
       ],
       "rewrites": [
         {
-          "source": "/api/**",
-          "run": {
-            "serviceId": "nesthub-api-staging",
-            "region": "asia-south1"
-          }
-        },
-        {
           "source": "**",
           "destination": "/index.html"
         }
